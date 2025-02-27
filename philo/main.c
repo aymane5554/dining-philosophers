@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/02/27 11:45:00 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/02/27 12:00:35 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,15 +36,15 @@ void	*death_check(void	*arg)
 //	args[1] = time_to_die
 //	args[2] = time_to_eat
 //	args[3] = time_to_sleep
-//	args[4] = number_of_times_each_philosopher_must_eat (optional) (-1 if not specifed)
+//	args[4] = number_of_times_each_philosopher_must_ea
+//			(optional)(-1 if not specifed)
 // 	args[5] = number_of_philosophers_alive
 
 int	main(int argc, char **argv)
 {
 	int			*args;
 	char		*forks;
-	pthread_t	thread;
-	pthread_t	death;
+	pthread_t	threads[2];
 	t_philo		*tmp;
 	int			i;
 
@@ -60,11 +60,11 @@ int	main(int argc, char **argv)
 		tmp->args = args;
 		tmp->forks = forks;
 		tmp->number = i + 1;
-		pthread_create(&thread, NULL, philosopher, tmp);
+		pthread_create(threads, NULL, philosopher, tmp);
 		i++;
 	}
-	pthread_create(&death, NULL, death_check, args);
-	pthread_join(death, NULL);
+	pthread_create(threads + 1, NULL, death_check, args);
+	pthread_join(threads[1], NULL);
 	(free(args), free(forks));
 	return (0);
 }
