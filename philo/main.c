@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/02/26 15:58:25 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/02/27 11:45:00 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,20 +22,29 @@ void	*philosopher(void	*arg)
 	return (NULL);
 }
 
+void	*death_check(void	*arg)
+{
+	int	*args;
+
+	args = (int *)arg;
+	while (args[5] == args[0])
+		continue ;
+	return (NULL);
+}
+
 //	args[0] = number_of_philosophers
 //	args[1] = time_to_die
 //	args[2] = time_to_eat
 //	args[3] = time_to_sleep
-//	args[4] = number_of_times_each_philosopher_must_eat (optional)
-
-// TODO:
-//      add a function to check if one of the philosophers is dead
+//	args[4] = number_of_times_each_philosopher_must_eat (optional) (-1 if not specifed)
+// 	args[5] = number_of_philosophers_alive
 
 int	main(int argc, char **argv)
 {
 	int			*args;
 	char		*forks;
 	pthread_t	thread;
+	pthread_t	death;
 	t_philo		*tmp;
 	int			i;
 
@@ -54,7 +63,8 @@ int	main(int argc, char **argv)
 		pthread_create(&thread, NULL, philosopher, tmp);
 		i++;
 	}
-	pthread_join(thread, NULL);
+	pthread_create(&death, NULL, death_check, args);
+	pthread_join(death, NULL);
 	(free(args), free(forks));
 	return (0);
 }
