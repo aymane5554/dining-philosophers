@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/02/27 12:00:35 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/02/28 08:43:44 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,10 @@ void	*philosopher(void	*arg)
 	return (NULL);
 }
 
-void	*death_check(void	*arg)
+void	death_check(int *args)
 {
-	int	*args;
-
-	args = (int *)arg;
 	while (args[5] == args[0])
 		continue ;
-	return (NULL);
 }
 
 //	args[0] = number_of_philosophers
@@ -63,8 +59,7 @@ int	main(int argc, char **argv)
 		pthread_create(threads, NULL, philosopher, tmp);
 		i++;
 	}
-	pthread_create(threads + 1, NULL, death_check, args);
-	pthread_join(threads[1], NULL);
+	death_check(args);
 	(free(args), free(forks));
 	return (0);
 }
