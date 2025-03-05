@@ -1,5 +1,5 @@
 CC = cc
-CFLAGS = #-Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror
 SRCS = ft_atoi.c main.c init.c
 OBJS = $(SRCS:%.c=%.o)
 NAME = philo

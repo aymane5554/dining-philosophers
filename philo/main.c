@@ -6,85 +6,36 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/03/01 15:31:26 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/03/05 01:09:10 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	*first_philosopher(void	*arg)
-{
-	t_philo				*philo;
-	pthread_mutex_t		lock;
-
-	pthread_mutex_init(&lock, NULL);
-	philo = (t_philo *)arg;
-	if (philo->forks[philo->args[0] - 1] == 'a'
-		&& philo->forks[philo->number] == 'a')
-	{
-		printf("%i is eating\n", philo->number);
-		pthread_mutex_lock(&lock);
-		philo->forks[philo->args[0] - 1] = 'u';
-		philo->forks[philo->number] = 'u';
-		pthread_mutex_unlock(&lock);
-		usleep(philo->args[2] * 1000);
-		pthread_mutex_lock(&lock);
-		philo->forks[philo->args[0] - 1] = 'a';
-		philo->forks[philo->number] = 'a';
-		pthread_mutex_unlock(&lock);
-		printf("%i is sleeping\n", philo->number);
-	}
-	free(arg);
-	return (NULL);
-}
-
-void	*last_philosopher(void	*arg)
-{
-	t_philo				*philo;
-	pthread_mutex_t		lock;
-
-	philo = (t_philo *)arg;
-	pthread_mutex_init(&lock, NULL);
-	if (philo->number == philo->args[0] && philo->forks[0] == 'a'
-		&& philo->forks[philo->number - 2] == 'a')
-	{
-		printf("%i is eating\n", philo->number);
-		pthread_mutex_lock(&lock);
-		philo->forks[0] = 'u';
-		philo->forks[philo->number - 2] = 'u';
-		pthread_mutex_unlock(&lock);
-		usleep(philo->args[2] * 1000);
-		pthread_mutex_lock(&lock);
-		philo->forks[0] = 'a';
-		philo->forks[philo->number - 2] = 'a';
-		pthread_mutex_unlock(&lock);
-		printf("%i is sleeping\n", philo->number);
-	}
-	free(arg);
-	return (NULL);
-}
-
 void	*philosopher(void	*arg)
 {
 	t_philo				*philo;
 	pthread_mutex_t		lock;
+	int					right;
+	int					left;
 
 	philo = (t_philo *)arg;
+	if (philo->number == 0)
+		left = philo->args[0] - 1;
+	else
+		left = philo->number - 1;
+	right = philo->number;
 	pthread_mutex_init(&lock, NULL);
-	if (philo->number != philo->args[0] && philo->number != 1
-		&& philo->forks[philo->number - 2] == 'a'
+	if (philo->forks[philo->number - 1] == 'a'
 		&& philo->forks[philo->number] == 'a')
 	{
-		printf("%i is eating\n", philo->number);
-		philo->forks[philo->number - 2] = 'u';
+		printf("%i is eating\n", philo->number + 1);
+		pthread_mutex_lock(&lock);	
+		philo->forks[philo->number - 1] = 'u';
 		philo->forks[philo->number] = 'u';
 		pthread_mutex_unlock(&lock);
-		usleep(philo->args[2] * 1000);
-		pthread_mutex_lock(&lock);
-		philo->forks[philo->number - 2] = 'a';
-		philo->forks[philo->number] = 'a';
-		pthread_mutex_unlock(&lock);
-		printf("%i is sleeping\n", philo->number);
+		usleep(philo->args[2] * 1000);	
+		printf("%i is sleeping\n", philo->number + 1);
 	}
 	free(arg);
 	return (NULL);
@@ -121,16 +72,27 @@ int	main(int argc, char **argv)
 	memset(forks, 'a', (args[0] * sizeof(char)));
 	while (i < args[0])
 	{
-		tmp = malloc(sizeof(t_philo));
-		tmp->args = args;
-		tmp->forks = forks;
-		tmp->number = i + 1;
-		if (i == 0)
-			pthread_create(threads + i, NULL, first_philosopher, tmp);
-		else if (i == args[0] - 1)
-			pthread_create(threads + i, NULL, last_philosopher, tmp);
-		else
-			pthread_create(threads + i, NULL, philosopher, tmp);
+		if (i % 2 == 0)
+		{
+			tmp = malloc(sizeof(t_philo));
+			tmp->args = args;
+			tmp->forks = forks;
+			tmp->number = i;
+			pthread_create(&threads[i], NULL, philosopher, tmp);
+		}
+		i++;
+	}
+	i = 0;
+	while (i < args[0])
+	{
+		if (i % 2 != 0)
+		{
+			tmp = malloc(sizeof(t_philo));
+			tmp->args = args;
+			tmp->forks = forks;
+			tmp->number = i;
+			pthread_create(&threads[i], NULL, philosopher, tmp);
+		}
 		i++;
 	}
 	return (death_check(args), free(args), free(forks), 0);
