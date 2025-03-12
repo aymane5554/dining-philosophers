@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/03/12 02:10:55 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/03/12 14:23:25 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,19 +44,25 @@ void	*philosopher(void	*arg)
 		printf("%i is thinking\n", philo->number + 1);
 	}
 	gettimeofday(&tv, NULL);
-	last_time = tv.tv_usec;
+	last_time = (tv.tv_sec*1000000) + tv.tv_usec;
 	while (philo->forks[forks_index[0]] != 'a' && philo->forks[forks_index[1]] != 'a')
 	{
 		gettimeofday(&tv, NULL);
-		if (tv.tv_usec - last_time > philo->args[1] * 1000)
-			return (philo->args[5]--, NULL);
+		if (((tv.tv_sec*1000000) + tv.tv_usec) - last_time > philo->args[1] * 1000)
+		{
+			printf("%i died\n", philo->number + 1);
+			pthread_mutex_lock(&lock);
+			philo->args[5]--;
+			pthread_mutex_unlock(&lock);
+			return (NULL);
+		}
 	}
 	return (free(arg), NULL);
 }
 
 void	death_check(int *args)
 {
-	while (args[5] == args[0] && args[4] != 0)
+	while (args[5] == args[0] && args[4] != 0 && args[6] != args[0])
 		continue ;
 }
 
