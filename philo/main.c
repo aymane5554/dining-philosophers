@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/03/12 01:42:21 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/03/12 02:10:55 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,9 +81,10 @@ void	make_threads(pthread_t	*threads, int *args, char *forks, char j)
 //	args[1] = time_to_die
 //	args[2] = time_to_eat
 //	args[3] = time_to_sleep
-//	args[4] = number_of_times_each_philosopher_must_ea
+//	args[4] = number_of_times_each_philosopher_must_eat
 //			(optional)(-1 if not specifed)
 // 	args[5] = number_of_philosophers_alive
+//	args[6] = The number of people who have finished eating (it equals 0 in the beginning)
 
 int	main(int argc, char **argv)
 {
