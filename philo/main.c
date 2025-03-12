@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/03/12 00:05:18 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/03/12 01:28:22 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,13 @@ void	*philosopher(void	*arg)
 	pthread_mutex_init(&lock, NULL);
 	if (philo->forks[forks_index[0]] == 'a' && philo->forks[forks_index[1]] == 'a')
 	{
-		(printf("%i is eating\n", philo->number + 1), pthread_mutex_lock(&lock));
+		printf("%i is eating\n", philo->number + 1);
+		pthread_mutex_lock(&lock);
 		ate++;
 		philo->forks[forks_index[1]] = 'u';
 		philo->forks[forks_index[0]] = 'u';
-		(pthread_mutex_unlock(&lock), usleep(philo->args[2] * 1000));
+		pthread_mutex_unlock(&lock);
+		usleep(philo->args[2] * 1000);
 		pthread_mutex_lock(&lock);
 		philo->forks[forks_index[1]] = 'a';
 		philo->forks[forks_index[0]] = 'a';
@@ -44,12 +46,12 @@ void	*philosopher(void	*arg)
 		printf("%i is thinking\n", philo->number + 1);
 	}
 	gettimeofday(&tv, NULL);
+	last_time = tv.tv_usec;
 	while (philo->forks[forks_index[0]] != 'a' && philo->forks[forks_index[1]] != 'a')
 	{
-		last_time = tv.tv_usec;
 		gettimeofday(&tv, NULL);
 		if (tv.tv_usec - last_time > philo->args[1] * 1000)
-			return (philo->args[5] = 0, NULL);
+			return (philo->args[5]--, NULL);
 	}
 	philosopher(arg);
 	return (free(arg), NULL);
