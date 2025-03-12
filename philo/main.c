@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/03/12 01:28:22 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/03/12 01:42:21 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ void	*philosopher(void	*arg)
 	pthread_mutex_t		lock;
 	int					forks_index[2];
 	struct timeval		tv;
-	static int			ate;
 	suseconds_t			last_time;
 
 	philo = (t_philo *)arg;
@@ -32,7 +31,6 @@ void	*philosopher(void	*arg)
 	{
 		printf("%i is eating\n", philo->number + 1);
 		pthread_mutex_lock(&lock);
-		ate++;
 		philo->forks[forks_index[1]] = 'u';
 		philo->forks[forks_index[0]] = 'u';
 		pthread_mutex_unlock(&lock);
@@ -53,7 +51,6 @@ void	*philosopher(void	*arg)
 		if (tv.tv_usec - last_time > philo->args[1] * 1000)
 			return (philo->args[5]--, NULL);
 	}
-	philosopher(arg);
 	return (free(arg), NULL);
 }
 
