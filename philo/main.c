@@ -6,19 +6,58 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/03/12 14:23:25 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/03/12 14:46:54 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void	die(t_philo	*philo, pthread_mutex_t *lock, int forks_index[2])
+{
+	suseconds_t			last_time;
+	struct timeval		tv;
+
+	gettimeofday(&tv, NULL);
+	last_time = (tv.tv_sec * 1000000) + tv.tv_usec;
+	while (philo->forks[forks_index[0]] != 'a'
+		&& philo->forks[forks_index[1]] != 'a')
+	{
+		gettimeofday(&tv, NULL);
+		if (((tv.tv_sec * 1000000) + tv.tv_usec) - last_time
+			> philo->args[1] * 1000)
+		{
+			printf("%i died\n", philo->number + 1);
+			pthread_mutex_lock(lock);
+			philo->args[5]--;
+			pthread_mutex_unlock(lock);
+		}
+	}
+}
+
+void	eat_then_sleep(t_philo	*philo, int forks_index[2],
+		pthread_mutex_t *lock)
+{
+	pthread_mutex_init(lock, NULL);
+	printf("%i is eating\n", philo->number + 1);
+	pthread_mutex_lock(lock);
+	philo->forks[forks_index[1]] = 'u';
+	philo->forks[forks_index[0]] = 'u';
+	pthread_mutex_unlock(lock);
+	usleep(philo->args[2] * 1000);
+	pthread_mutex_lock(lock);
+	philo->forks[forks_index[1]] = 'a';
+	philo->forks[forks_index[0]] = 'a';
+	pthread_mutex_unlock(lock);
+	printf("%i is sleeping\n", philo->number + 1);
+	usleep(philo->args[3] * 1000);
+	printf("%i is thinking\n", philo->number + 1);
+}
 
 void	*philosopher(void	*arg)
 {
 	t_philo				*philo;
 	pthread_mutex_t		lock;
 	int					forks_index[2];
-	struct timeval		tv;
-	suseconds_t			last_time;
 
 	philo = (t_philo *)arg;
 	if (philo->number == 0)
@@ -27,36 +66,10 @@ void	*philosopher(void	*arg)
 		forks_index[0] = philo->number - 1;
 	forks_index[1] = philo->number;
 	pthread_mutex_init(&lock, NULL);
-	if (philo->forks[forks_index[0]] == 'a' && philo->forks[forks_index[1]] == 'a')
-	{
-		printf("%i is eating\n", philo->number + 1);
-		pthread_mutex_lock(&lock);
-		philo->forks[forks_index[1]] = 'u';
-		philo->forks[forks_index[0]] = 'u';
-		pthread_mutex_unlock(&lock);
-		usleep(philo->args[2] * 1000);
-		pthread_mutex_lock(&lock);
-		philo->forks[forks_index[1]] = 'a';
-		philo->forks[forks_index[0]] = 'a';
-		pthread_mutex_unlock(&lock);
-		printf("%i is sleeping\n", philo->number + 1);
-		usleep(philo->args[3] * 1000);
-		printf("%i is thinking\n", philo->number + 1);
-	}
-	gettimeofday(&tv, NULL);
-	last_time = (tv.tv_sec*1000000) + tv.tv_usec;
-	while (philo->forks[forks_index[0]] != 'a' && philo->forks[forks_index[1]] != 'a')
-	{
-		gettimeofday(&tv, NULL);
-		if (((tv.tv_sec*1000000) + tv.tv_usec) - last_time > philo->args[1] * 1000)
-		{
-			printf("%i died\n", philo->number + 1);
-			pthread_mutex_lock(&lock);
-			philo->args[5]--;
-			pthread_mutex_unlock(&lock);
-			return (NULL);
-		}
-	}
+	if (philo->forks[forks_index[0]] == 'a'
+		&& philo->forks[forks_index[1]] == 'a')
+		eat_then_sleep(philo, forks_index, &lock);
+	die(philo, &lock, forks_index);
 	return (free(arg), NULL);
 }
 
@@ -66,23 +79,6 @@ void	death_check(int *args)
 		continue ;
 }
 
-void	make_threads(pthread_t	*threads, int *args, char *forks, char j)
-{
-	int			i;
-	t_philo		*tmp;
-
-	i = j;
-	while (i < args[0])
-	{
-		tmp = malloc(sizeof(t_philo));
-		tmp->args = args;
-		tmp->forks = forks;
-		tmp->number = i;
-		pthread_create(&threads[i], NULL, philosopher, tmp);
-		i += 2;
-	}
-}
-
 //	args[0] = number_of_philosophers
 //	args[1] = time_to_die
 //	args[2] = time_to_eat
@@ -90,7 +86,8 @@ void	make_threads(pthread_t	*threads, int *args, char *forks, char j)
 //	args[4] = number_of_times_each_philosopher_must_eat
 //			(optional)(-1 if not specifed)
 // 	args[5] = number_of_philosophers_alive
-//	args[6] = The number of people who have finished eating (it equals 0 in the beginning)
+//	args[6] = The number of people who have
+//			finished eating (it equals 0 in the beginning)
 
 int	main(int argc, char **argv)
 {

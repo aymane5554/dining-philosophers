@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:25:01 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/02/27 11:06:12 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/03/12 14:41:16 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@
 int		ft_atoi(const char *ptr);
 int		*get_args(int argc, char **argv);
 void	error(void);
+void	make_threads(pthread_t	*threads, int *args, char *forks, char j);
+void	*philosopher(void	*arg);
 
 typedef struct s_philo
 {

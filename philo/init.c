@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:32 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/03/12 02:09:17 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/03/12 14:41:19 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,4 +43,21 @@ int	*get_args(int argc, char **argv)
 void	error(void)
 {
 	write(2, "error\n", 6);
+}
+
+void	make_threads(pthread_t	*threads, int *args, char *forks, char j)
+{
+	int			i;
+	t_philo		*tmp;
+
+	i = j;
+	while (i < args[0])
+	{
+		tmp = malloc(sizeof(t_philo));
+		tmp->args = args;
+		tmp->forks = forks;
+		tmp->number = i;
+		pthread_create(&threads[i], NULL, philosopher, tmp);
+		i += 2;
+	}
 }
