@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:32 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/03/12 14:41:19 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/03/13 17:50:13 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	*get_args(int argc, char **argv)
 		j++;
 	}
 	if (argc == 6)
-		args[4] = -1;
+		args[4] = 1;
 	args[5] = args[0];
 	args[6] = 0;
 	return (args);

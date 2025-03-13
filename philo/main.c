@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/03/12 14:46:54 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/03/13 17:55:18 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void	die(t_philo	*philo, pthread_mutex_t *lock, int forks_index[2])
 			pthread_mutex_lock(lock);
 			philo->args[5]--;
 			pthread_mutex_unlock(lock);
+			return ;
 		}
 	}
 }
@@ -58,6 +59,7 @@ void	*philosopher(void	*arg)
 	t_philo				*philo;
 	pthread_mutex_t		lock;
 	int					forks_index[2];
+	int					i;
 
 	philo = (t_philo *)arg;
 	if (philo->number == 0)
@@ -65,12 +67,21 @@ void	*philosopher(void	*arg)
 	else
 		forks_index[0] = philo->number - 1;
 	forks_index[1] = philo->number;
+	i = 0;
 	pthread_mutex_init(&lock, NULL);
-	if (philo->forks[forks_index[0]] == 'a'
-		&& philo->forks[forks_index[1]] == 'a')
-		eat_then_sleep(philo, forks_index, &lock);
-	die(philo, &lock, forks_index);
-	return (free(arg), NULL);
+	while (i < philo->args[4])
+	{
+		if (philo->forks[forks_index[0]] == 'a'
+			&& philo->forks[forks_index[1]] == 'a')
+		{
+			eat_then_sleep(philo, forks_index, &lock);
+			i++;
+		}
+		die(philo, &lock, forks_index);
+	}
+	pthread_mutex_lock(&lock);
+	philo->args[6]++;
+	return (pthread_mutex_unlock(&lock), free(arg), NULL);
 }
 
 void	death_check(int *args)
@@ -84,7 +95,7 @@ void	death_check(int *args)
 //	args[2] = time_to_eat
 //	args[3] = time_to_sleep
 //	args[4] = number_of_times_each_philosopher_must_eat
-//			(optional)(-1 if not specifed)
+//			(optional)(1 if not specifed)
 // 	args[5] = number_of_philosophers_alive
 //	args[6] = The number of people who have
 //			finished eating (it equals 0 in the beginning)
@@ -101,9 +112,9 @@ int	main(int argc, char **argv)
 	forks = malloc(args[0] * sizeof(char));
 	threads = malloc(args[0] * sizeof(pthread_t));
 	memset(forks, 'a', (args[0] * sizeof(char)));
-	// TODO: if there is one philospher.
+	if (args[0] == 1)
+		return (printf("1 died\n"), free(threads), free(args), free(forks), 0);
 	make_threads(threads, args, forks, 0);
 	make_threads(threads, args, forks, 1);
-	free(threads);
 	return (death_check(args), free(args), free(forks), 0);
 }
