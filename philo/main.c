@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/03/16 01:40:14 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/03/16 02:04:19 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,7 @@ char	die(t_philo	*philo, int forks_index[2], pthread_mutex_t *lock)
 
 	gettimeofday(&tv, NULL);
 	last_time = (tv.tv_sec * 1000000) + tv.tv_usec;
-	while (philo->forks[forks_index[0]] == 'u'
-			&& philo->forks[forks_index[1]] == 'u')
+	while (!check_forks(lock, philo, forks_index))
 	{
 		gettimeofday(&tv, NULL);
 		if (((tv.tv_sec * 1000000) + tv.tv_usec) - last_time
@@ -71,15 +70,20 @@ void	*philosopher(void	*arg)
 	pthread_mutex_init(&lock, NULL);
 	while (i < philo->args[4])
 	{
-		if (philo->forks[forks_index[0]] == 'a'
-			&& philo->forks[forks_index[1]] == 'a')
-			(eat_then_sleep(philo, forks_index, &lock), i++);
+		if (check_forks(&lock, philo, forks_index) == 1)
+		{
+			eat_then_sleep(philo, forks_index, &lock);
+			i++;
+		}
 		if (die(philo, forks_index, &lock) == 1)
 			break ;
 	}
-	pthread_mutex_lock(&lock);
-	philo->args[6]++;
-	return (pthread_mutex_unlock(&lock), free(arg), NULL);
+	if (i == philo->args[4])
+	{
+		pthread_mutex_lock(&lock);
+		(philo->args[6]++, pthread_mutex_unlock(&lock));
+	}
+	return (free(arg), NULL);
 }
 
 void	death_check(int *args)
