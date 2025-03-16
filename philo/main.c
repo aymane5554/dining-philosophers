@@ -6,21 +6,21 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/03/13 17:55:18 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/03/16 01:40:14 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	die(t_philo	*philo, pthread_mutex_t *lock, int forks_index[2])
+char	die(t_philo	*philo, int forks_index[2], pthread_mutex_t *lock)
 {
 	suseconds_t			last_time;
 	struct timeval		tv;
 
 	gettimeofday(&tv, NULL);
 	last_time = (tv.tv_sec * 1000000) + tv.tv_usec;
-	while (philo->forks[forks_index[0]] != 'a'
-		&& philo->forks[forks_index[1]] != 'a')
+	while (philo->forks[forks_index[0]] == 'u'
+			&& philo->forks[forks_index[1]] == 'u')
 	{
 		gettimeofday(&tv, NULL);
 		if (((tv.tv_sec * 1000000) + tv.tv_usec) - last_time
@@ -30,15 +30,15 @@ void	die(t_philo	*philo, pthread_mutex_t *lock, int forks_index[2])
 			pthread_mutex_lock(lock);
 			philo->args[5]--;
 			pthread_mutex_unlock(lock);
-			return ;
+			return (1);
 		}
 	}
+	return (0);
 }
 
 void	eat_then_sleep(t_philo	*philo, int forks_index[2],
 		pthread_mutex_t *lock)
 {
-	pthread_mutex_init(lock, NULL);
 	printf("%i is eating\n", philo->number + 1);
 	pthread_mutex_lock(lock);
 	philo->forks[forks_index[1]] = 'u';
@@ -73,11 +73,9 @@ void	*philosopher(void	*arg)
 	{
 		if (philo->forks[forks_index[0]] == 'a'
 			&& philo->forks[forks_index[1]] == 'a')
-		{
-			eat_then_sleep(philo, forks_index, &lock);
-			i++;
-		}
-		die(philo, &lock, forks_index);
+			(eat_then_sleep(philo, forks_index, &lock), i++);
+		if (die(philo, forks_index, &lock) == 1)
+			break ;
 	}
 	pthread_mutex_lock(&lock);
 	philo->args[6]++;
@@ -97,7 +95,7 @@ void	death_check(int *args)
 //	args[4] = number_of_times_each_philosopher_must_eat
 //			(optional)(1 if not specifed)
 // 	args[5] = number_of_philosophers_alive
-//	args[6] = The number of people who have
+//	args[6] = The number of philosophers who have
 //			finished eating (it equals 0 in the beginning)
 
 int	main(int argc, char **argv)
@@ -112,8 +110,8 @@ int	main(int argc, char **argv)
 	forks = malloc(args[0] * sizeof(char));
 	threads = malloc(args[0] * sizeof(pthread_t));
 	memset(forks, 'a', (args[0] * sizeof(char)));
-	if (args[0] == 1)
-		return (printf("1 died\n"), free(threads), free(args), free(forks), 0);
+	// if (args[0] == 1)
+	// 	return (printf("1 died\n"), free(threads), free(args), free(forks), 0);
 	make_threads(threads, args, forks, 0);
 	make_threads(threads, args, forks, 1);
 	return (death_check(args), free(args), free(forks), 0);
