@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/03/17 03:47:24 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/03/17 05:02:16 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ char	die(t_philo	*philo, int forks_index[2], pthread_mutex_t *lock)
 		if (((tv.tv_sec * 1000000) + tv.tv_usec) - last_time
 			> philo->args[1] * 1000)
 		{
-			printf("%i died\n", philo->number + 1);
+			printf("%li %i died\n", (tv.tv_sec * 1000) + (tv.tv_usec / 1000),
+				philo->number + 1);
 			pthread_mutex_lock(lock);
 			philo->args[5]--;
 			pthread_mutex_unlock(lock);
@@ -38,19 +39,27 @@ char	die(t_philo	*philo, int forks_index[2], pthread_mutex_t *lock)
 void	eat_then_sleep(t_philo	*philo, int forks_index[2],
 		pthread_mutex_t *lock)
 {
-	printf("%i is eating\n", philo->number + 1);
+	struct timeval		tv;
+
+	gettimeofday(&tv, NULL);
+	printf("%li %i has taken a fork\n", (tv.tv_sec * 1000) + (tv.tv_usec / 1000),
+		philo->number + 1);
 	pthread_mutex_lock(lock);
 	philo->forks[forks_index[1]] = 'u';
 	philo->forks[forks_index[0]] = 'u';
 	pthread_mutex_unlock(lock);
+	printf("%li %i is eating\n", (tv.tv_sec * 1000) + (tv.tv_usec / 1000),
+		philo->number + 1);
 	usleep(philo->args[2] * 1000);
 	pthread_mutex_lock(lock);
 	philo->forks[forks_index[1]] = 'a';
 	philo->forks[forks_index[0]] = 'a';
 	pthread_mutex_unlock(lock);
-	printf("%i is sleeping\n", philo->number + 1);
+	printf("%li %i is sleeping\n", (tv.tv_sec * 1000) + (tv.tv_usec / 1000),
+		philo->number + 1);
 	usleep(philo->args[3] * 1000);
-	printf("%i is thinking\n", philo->number + 1);
+	printf("%li %i is thinking\n", (tv.tv_sec * 1000) + (tv.tv_usec / 1000),
+		philo->number + 1);
 }
 
 void	*philosopher(void	*arg)
@@ -81,7 +90,8 @@ void	*philosopher(void	*arg)
 	if (i == philo->args[4])
 	{
 		pthread_mutex_lock(&lock);
-		(philo->args[6]++, pthread_mutex_unlock(&lock));
+		philo->args[6]++;
+		pthread_mutex_unlock(&lock);
 	}
 	return (free(arg), NULL);
 }
@@ -114,8 +124,8 @@ int	main(int argc, char **argv)
 	forks = malloc(args[0] * sizeof(char));
 	threads = malloc(args[0] * sizeof(pthread_t));
 	memset(forks, 'a', (args[0] * sizeof(char)));
-	// if (args[0] == 1)
-	// 	return (printf("1 died\n"), free(threads), free(args), free(forks), 0);
+	if (args[0] == 1)
+		return (dying_alone(threads, args, forks), 0);
 	make_threads(threads, args, forks, 0);
 	usleep(1000);
 	make_threads(threads, args, forks, 1);

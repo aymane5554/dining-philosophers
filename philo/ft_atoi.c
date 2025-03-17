@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:31:04 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/02/26 10:11:35 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/03/17 04:28:08 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	ft_atoi(const char *ptr)
 		last = total;
 		ptr++;
 	}
-	if (*ptr != ' ' && *ptr != '\0')
+	if ((*ptr != ' ' && *ptr != '\0') || total == 0)
 		return (-1);
 	return (total);
 }

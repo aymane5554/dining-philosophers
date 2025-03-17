@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:25:01 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/03/16 00:38:07 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/03/17 04:59:08 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ typedef struct s_philo
 	int		number;
 }	t_philo;
 
-int		check_forks(pthread_mutex_t *lock, t_philo *philo, int	forks_index[2]);
+int		check_forks(pthread_mutex_t *lock, t_philo *philo, int forks_index[2]);
+void	dying_alone(pthread_t *threads, int *args, char *forks);
 
 #endif
