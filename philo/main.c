@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/03/16 02:04:19 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/03/17 03:47:24 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,7 @@ int	main(int argc, char **argv)
 	// if (args[0] == 1)
 	// 	return (printf("1 died\n"), free(threads), free(args), free(forks), 0);
 	make_threads(threads, args, forks, 0);
+	usleep(1000);
 	make_threads(threads, args, forks, 1);
 	return (death_check(args), free(args), free(forks), 0);
 }
