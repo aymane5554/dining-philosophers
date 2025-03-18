@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/03/18 23:29:06 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/03/18 23:41:36 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,15 @@ char	die(t_philo	*philo, int forks_index[2], pthread_mutex_t *lock)
 	while (!check_forks(lock, philo, forks_index))
 	{
 		gettimeofday(&tv, NULL);
+		pthread_mutex_lock(lock);
 		if (((tv.tv_sec * 1000) + tv.tv_usec / 1000) - last_time
 			> philo->args[1])
 		{
-			pthread_mutex_lock(lock);
 			philo->args[5] = philo->number + 1;
 			pthread_mutex_unlock(lock);
 			return (1);
 		}
+		pthread_mutex_unlock(lock);
 	}
 	return (0);
 }
@@ -109,9 +110,9 @@ void	check_death(int *args, pthread_mutex_t *lock)
 	gettimeofday(&tv, NULL);
 	while (1)
 	{
-		usleep(1000);
+		usleep(100);
 		pthread_mutex_lock(lock);
-		if (args[6] == args[0] && args[5] != 0)
+		if (args[6] == args[0] || args[5] != 0)
 		{
 			pthread_mutex_unlock(lock);
 			break ;
