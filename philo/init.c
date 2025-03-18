@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:32 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/03/18 06:12:02 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/03/18 21:58:18 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	error(void)
 	write(2, "error\n", 6);
 }
 
-void	make_threads(pthread_t	*threads, int *args, char *forks)
+void	make_threads(pthread_t	*threads, int *args, char *forks, pthread_mutex_t *lock)
 {
 	int			i;
 	t_philo		*tmp;
@@ -58,7 +58,9 @@ void	make_threads(pthread_t	*threads, int *args, char *forks)
 		tmp->args = args;
 		tmp->forks = forks;
 		tmp->number = i;
-		pthread_create(&threads[i], NULL, philosopher, tmp);
+		tmp->lock = lock;
+		pthread_create(threads + i, NULL, philosopher, tmp);
+		pthread_detach(threads[i]);
 		i += 2;
 	}
 	j++;
