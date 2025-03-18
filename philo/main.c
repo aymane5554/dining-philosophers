@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/03/17 23:25:14 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/03/18 05:57:49 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,9 @@ void	*philosopher(void	*arg)
 	t_philo				*philo;
 	int					forks_index[2];
 	int					i;
+	pthread_mutex_t		lock;
 
+	pthread_mutex_init(&lock, NULL);
 	philo = (t_philo *)arg;
 	if (philo->number == 0)
 		forks_index[0] = philo->args[0] - 1;
@@ -77,21 +79,27 @@ void	*philosopher(void	*arg)
 	i = 0;
 	while (i < philo->args[4])
 	{
-		if (check_forks(philo->lock, philo, forks_index) == 1)
+		if (check_forks(&lock, philo, forks_index) == 1)
 		{
-			eat_then_sleep(philo, forks_index, philo->lock);
+			eat_then_sleep(philo, forks_index, &lock);
 			i++;
 		}
-		if (die(philo, forks_index, philo->lock) == 1)
+		if (die(philo, forks_index, &lock) == 1)
 			break ;
 	}
 	if (i == philo->args[4])
 	{
-		pthread_mutex_lock(philo->lock);
+		pthread_mutex_lock(&lock);
 		philo->args[6]++;
-		pthread_mutex_unlock(philo->lock);
+		pthread_mutex_unlock(&lock);
 	}
 	return (free(arg), NULL);
+}
+
+void	check_death(int *args)
+{
+	while (args[6] != args[0] && args[5] == args[0])
+		continue ;
 }
 
 //	args[0] = number_of_philosophers
@@ -109,9 +117,7 @@ int	main(int argc, char **argv)
 	int					*args;
 	char				*forks;
 	pthread_t			*threads;
-	pthread_mutex_t		lock;
 
-	pthread_mutex_init(&lock, NULL);
 	args = get_args(argc, argv);
 	if (args == NULL)
 		return (error(), 0);
@@ -120,8 +126,9 @@ int	main(int argc, char **argv)
 	memset(forks, 'a', (args[0] * sizeof(char)));
 	if (args[0] == 1)
 		return (dying_alone(threads, args, forks), 0);
-	make_threads(threads, args, forks, &lock);
+	make_threads(threads, args, forks);
 	usleep(1000);
-	make_threads(threads, args, forks, &lock);
+	make_threads(threads, args, forks);
+	check_death(args);
 	return (free(args), free(forks), 0);
 }
