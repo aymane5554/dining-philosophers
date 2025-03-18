@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/03/18 05:59:30 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/03/18 06:14:54 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,8 @@ char	die(t_philo	*philo, int forks_index[2], pthread_mutex_t *lock)
 		if (((tv.tv_sec * 1000000) + tv.tv_usec) - last_time
 			> philo->args[1] * 1000)
 		{
-			printf("%li %i died\n", (tv.tv_sec * 1000) + (tv.tv_usec / 1000),
-				philo->number + 1); 
 			pthread_mutex_lock(lock);
-			philo->args[5]--;
+			philo->args[5] = philo->number + 1;
 			pthread_mutex_unlock(lock);
 			return (1);
 		}
@@ -98,8 +96,13 @@ void	*philosopher(void	*arg)
 
 void	check_death(int *args)
 {
-	while (args[6] != args[0] && args[5] == args[0])
+	struct timeval		tv;
+
+	gettimeofday(&tv, NULL);
+	while (args[6] != args[0] && args[5] == 0)
 		continue ;
+	if (args[5] != 0)
+		printf("%li %i died\n", (tv.tv_sec * 1000) + (tv.tv_usec / 1000), args[5]); 
 }
 
 //	args[0] = number_of_philosophers
@@ -108,7 +111,7 @@ void	check_death(int *args)
 //	args[3] = time_to_sleep
 //	args[4] = number_of_times_each_philosopher_must_eat
 //			(optional)(1 if not specifed)
-// 	args[5] = number_of_philosophers_alive
+// 	args[5] = the dead philosopher
 //	args[6] = The number of philosophers who have
 //			finished eating (it equals 0 in the beginning)
 
