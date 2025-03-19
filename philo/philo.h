@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:25:01 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/03/18 21:30:10 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/03/19 01:58:57 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@
 int		ft_atoi(const char *ptr);
 int		*get_args(int argc, char **argv);
 void	error(void);
-void	make_threads(pthread_t	*threads, int *args, char *forks, pthread_mutex_t *lock);
+void	make_threads(pthread_t	*threads, int *args, char *forks,
+			pthread_mutex_t *lock);
 void	*philosopher(void	*arg);
 
 typedef struct s_philo
@@ -36,5 +37,9 @@ typedef struct s_philo
 
 int		check_forks(pthread_mutex_t *lock, t_philo *philo, int forks_index[2]);
 void	dying_alone(pthread_t *threads, int *args, char *forks);
+int		finish(pthread_mutex_t *lock, int *args, char *forks,
+			pthread_t *threads);
+long	timestamp(struct timeval arg_tv, pthread_mutex_t *lock);
+void	increment(t_philo *philo);
 
 #endif

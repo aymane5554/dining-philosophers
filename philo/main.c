@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/03/19 01:38:08 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/03/19 01:59:13 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	die(t_philo	*philo, int forks_index[2], pthread_mutex_t *lock)
 	struct timeval		tv;
 
 	gettimeofday(&tv, NULL);
-	last_time = (tv.tv_sec * 1000) + tv.tv_usec/1000;
+	last_time = (tv.tv_sec * 1000) + tv.tv_usec / 1000;
 	while (!check_forks(lock, philo, forks_index))
 	{
 		gettimeofday(&tv, NULL);
@@ -44,15 +44,13 @@ void	eat_then_sleep(t_philo	*philo, int forks_index[2],
 	int					arg;
 
 	gettimeofday(&tv, NULL);
-	printf("%li %i has taken a fork\n", timestamp(tv, lock),
-		philo->number + 1);
+	printf("%li %i has taken a fork\n", timestamp(tv, lock), philo->number + 1);
 	pthread_mutex_lock(lock);
 	philo->forks[forks_index[1]] = 'u';
 	philo->forks[forks_index[0]] = 'u';
 	arg = philo->args[2];
 	pthread_mutex_unlock(lock);
-	printf("%li %i is eating\n", timestamp(tv, lock),
-		philo->number + 1);
+	printf("%li %i is eating\n", timestamp(tv, lock), philo->number + 1);
 	usleep(arg * 1000);
 	pthread_mutex_lock(lock);
 	philo->forks[forks_index[1]] = 'a';
@@ -60,12 +58,10 @@ void	eat_then_sleep(t_philo	*philo, int forks_index[2],
 	arg = philo->args[3];
 	pthread_mutex_unlock(lock);
 	gettimeofday(&tv, NULL);
-	printf("%li %i is sleeping\n", timestamp(tv, lock),
-		philo->number + 1);
+	printf("%li %i is sleeping\n", timestamp(tv, lock), philo->number + 1);
 	usleep(arg * 1000);
 	gettimeofday(&tv, NULL);
-	printf("%li %i is thinking\n", timestamp(tv, lock),
-		philo->number + 1);
+	printf("%li %i is thinking\n", timestamp(tv, lock), philo->number + 1);
 }
 
 void	*philosopher(void	*arg)
@@ -85,24 +81,15 @@ void	*philosopher(void	*arg)
 	while (i < philo->args[4])
 	{
 		if (check_forks(philo->lock, philo, forks_index) == 1)
-		{
-			eat_then_sleep(philo, forks_index, philo->lock);
-			i++;
-		}
+			(eat_then_sleep(philo, forks_index, philo->lock), i++);
 		if (die(philo, forks_index, philo->lock) == 1)
 			break ;
 	}
 	if (i == philo->args[4])
-	{
-		pthread_mutex_lock(philo->lock);
-		philo->args[6]++;
-		pthread_mutex_unlock(philo->lock);
-	}
+		increment(philo);
 	lock = philo->lock;
-	pthread_mutex_lock(lock);
-	free(arg);
-	pthread_mutex_unlock(lock);
-	return (NULL);
+	(pthread_mutex_lock(lock), free(arg));
+	return (pthread_mutex_unlock(lock), NULL);
 }
 
 void	check_death(int *args, pthread_mutex_t *lock)
@@ -139,32 +126,6 @@ void	check_death(int *args, pthread_mutex_t *lock)
 // 	args[5] = the dead philosopher
 //	args[6] = The number of philosophers who have
 //			finished eating (it equals 0 in the beginning)
-
-int finish(pthread_mutex_t *lock, int *args, char *forks, pthread_t *threads)
-{
-	pthread_mutex_lock(lock);
-	free(args);
-	free(forks);
-	free(threads);
-	return (0);
-}
-
-long	timestamp(struct timeval arg_tv, pthread_mutex_t *lock)
-{
-	static struct timeval		tv;
-	static int					i;
-	long						time;
-	long						time2;
-
-	pthread_mutex_lock(lock);
-	if (i == 0)
-		gettimeofday(&tv, NULL);
-	time = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
-	time2 = (arg_tv.tv_sec * 1000) + (arg_tv.tv_usec / 1000);
-	i = 1;
-	pthread_mutex_unlock(lock);
-	return (time2 - time);
-}
 
 int	main(int argc, char **argv)
 {

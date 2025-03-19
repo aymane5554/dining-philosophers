@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 00:29:46 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/03/17 05:01:30 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/03/19 01:59:50 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,4 +32,37 @@ void	dying_alone(pthread_t *threads, int *args, char *forks)
 	free(threads);
 	free(args);
 	free(forks);
+}
+
+int	finish(pthread_mutex_t *lock, int *args, char *forks, pthread_t *threads)
+{
+	pthread_mutex_lock(lock);
+	free(args);
+	free(forks);
+	free(threads);
+	return (0);
+}
+
+long	timestamp(struct timeval arg_tv, pthread_mutex_t *lock)
+{
+	static struct timeval		tv;
+	static int					i;
+	long						time;
+	long						time2;
+
+	pthread_mutex_lock(lock);
+	if (i == 0)
+		gettimeofday(&tv, NULL);
+	time = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+	time2 = (arg_tv.tv_sec * 1000) + (arg_tv.tv_usec / 1000);
+	i = 1;
+	pthread_mutex_unlock(lock);
+	return (time2 - time);
+}
+
+void	increment(t_philo *philo)
+{
+	pthread_mutex_lock(philo->lock);
+	philo->args[6]++;
+	pthread_mutex_unlock(philo->lock);
 }
