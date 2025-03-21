@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 00:29:46 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/03/19 01:59:50 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/03/21 21:42:02 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	check_forks(pthread_mutex_t *lock, t_philo *philo, int forks_index[2])
 	return (0);
 }
 
-void	dying_alone(pthread_t *threads, int *args, char *forks)
+void	dying_alone(pthread_t *threads, long long *args, char *forks)
 {
 	struct timeval		tv;
 
@@ -34,7 +34,7 @@ void	dying_alone(pthread_t *threads, int *args, char *forks)
 	free(forks);
 }
 
-int	finish(pthread_mutex_t *lock, int *args, char *forks, pthread_t *threads)
+int	finish(pthread_mutex_t *lock, long long *args, char *forks, pthread_t *threads)
 {
 	pthread_mutex_lock(lock);
 	free(args);
@@ -53,6 +53,8 @@ long	timestamp(struct timeval arg_tv, pthread_mutex_t *lock)
 	pthread_mutex_lock(lock);
 	if (i == 0)
 		gettimeofday(&tv, NULL);
+	if (lock == NULL)
+		return (0);
 	time = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
 	time2 = (arg_tv.tv_sec * 1000) + (arg_tv.tv_usec / 1000);
 	i = 1;
@@ -60,9 +62,10 @@ long	timestamp(struct timeval arg_tv, pthread_mutex_t *lock)
 	return (time2 - time);
 }
 
-void	increment(t_philo *philo)
+void	increment(t_philo *philo, int i)
 {
 	pthread_mutex_lock(philo->lock);
-	philo->args[6]++;
+	if (i == philo->args[4])
+		philo->args[6]++;
 	pthread_mutex_unlock(philo->lock);
 }

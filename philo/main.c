@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/03/19 01:59:13 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/03/21 21:46:19 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,21 +18,23 @@ char	die(t_philo	*philo, int forks_index[2], pthread_mutex_t *lock)
 {
 	suseconds_t			last_time;
 	struct timeval		tv;
+	int					tmp;
 
 	gettimeofday(&tv, NULL);
 	last_time = (tv.tv_sec * 1000) + tv.tv_usec / 1000;
+	tmp = philo->args[1];
 	while (!check_forks(lock, philo, forks_index))
 	{
 		gettimeofday(&tv, NULL);
-		pthread_mutex_lock(lock);
 		if (((tv.tv_sec * 1000) + tv.tv_usec / 1000) - last_time
-			> philo->args[1])
+		> tmp)
 		{
+			pthread_mutex_lock(lock);
+			gettimeofday((struct timeval *)philo->args[7], NULL);
 			philo->args[5] = philo->number + 1;
 			pthread_mutex_unlock(lock);
 			return (1);
 		}
-		pthread_mutex_unlock(lock);
 	}
 	return (0);
 }
@@ -85,22 +87,18 @@ void	*philosopher(void	*arg)
 		if (die(philo, forks_index, philo->lock) == 1)
 			break ;
 	}
-	if (i == philo->args[4])
-		increment(philo);
+	increment(philo, i);
 	lock = philo->lock;
 	(pthread_mutex_lock(lock), free(arg));
 	return (pthread_mutex_unlock(lock), NULL);
 }
 
-void	check_death(int *args, pthread_mutex_t *lock)
+void	check_death(long long *args, pthread_mutex_t *lock)
 {
-	struct timeval		tv;
 	int					tmp;
 
-	gettimeofday(&tv, NULL);
 	while (1)
 	{
-		usleep(100);
 		pthread_mutex_lock(lock);
 		if (args[6] == args[0] || args[5] != 0)
 		{
@@ -112,9 +110,8 @@ void	check_death(int *args, pthread_mutex_t *lock)
 	pthread_mutex_lock(lock);
 	tmp = args[5];
 	pthread_mutex_unlock(lock);
-	gettimeofday(&tv, NULL);
-	if (args[5] != 0)
-		printf("%li %i died\n", timestamp(tv, lock), args[5]);
+	if (tmp != 0)
+		printf("%li %i died\n", timestamp(*(struct timeval *)args[7], lock), tmp);
 }
 
 //	args[0] = number_of_philosophers
@@ -126,15 +123,16 @@ void	check_death(int *args, pthread_mutex_t *lock)
 // 	args[5] = the dead philosopher
 //	args[6] = The number of philosophers who have
 //			finished eating (it equals 0 in the beginning)
+// 	args[7] = time of death of a philosopher (is a timeval pointer casted to long long)
 
 int	main(int argc, char **argv)
 {
-	int					*args;
+	long long			*args;
 	char				*forks;
-	pthread_t			*threads;
-	pthread_mutex_t		lock;
+	pthread_t			*threads;	
+	struct timeval		tv;
+	pthread_mutex_t		*lock;
 
-	pthread_mutex_init(&lock, NULL);
 	args = get_args(argc, argv);
 	if (args == NULL)
 		return (error(), 0);
@@ -143,9 +141,10 @@ int	main(int argc, char **argv)
 	memset(forks, 'a', (args[0] * sizeof(char)));
 	if (args[0] == 1)
 		return (dying_alone(threads, args, forks), 0);
-	make_threads(threads, args, forks, &lock);
+	args[7] = (long long)&tv;
+	lock = make_threads(threads, args, forks);
 	usleep(1000);
-	make_threads(threads, args, forks, &lock);
-	check_death(args, &lock);
-	return (finish(&lock, args, forks, threads));
+	lock = make_threads(threads, args, forks);
+	check_death(args, lock);
+	return (finish(lock, args, forks, threads));
 }
