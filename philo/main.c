@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/03/24 00:59:59 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/03/24 02:07:43 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ void	*philosopher(void	*arg)
 	{
 		if (check_forks(philo->lock, philo, forks_index) == 1)
 			(eat_then_sleep(philo, forks_index, philo->lock), i++);
-		else if (die(philo, forks_index, philo->lock) == 1)
+		if (die(philo, forks_index, philo->lock) == 1)
 			break ;
 	}
 	increment(philo, i);
@@ -152,6 +152,7 @@ int	main(int argc, char **argv)
 	args[7] = (long long)&tv;
 	locks = creating_locks();
 	make_threads(threads, args, forks, locks);
+	usleep(1000);
 	make_threads(threads, args, forks, locks);
 	check_death(args, locks);
 	return (finish(locks, args, forks, threads));
