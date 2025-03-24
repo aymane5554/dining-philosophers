@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:32 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/03/21 21:48:54 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/03/24 00:24:08 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,27 +46,35 @@ void	error(void)
 	write(2, "error\n", 6);
 }
 
-pthread_mutex_t	*make_threads(pthread_t	*threads, long long *args, char *forks)
+pthread_mutex_t	*creating_locks(void)
+{
+	pthread_mutex_t	*locks;
+
+	locks = malloc(3 * sizeof(pthread_mutex_t));
+	pthread_mutex_init(locks, NULL);
+	pthread_mutex_init(locks + 1, NULL);
+	pthread_mutex_init(locks + 2, NULL);
+	return (locks);
+}
+
+void	make_threads(pthread_t	*threads, long long *args, char *forks, pthread_mutex_t	*locks)
 {
 	int							i;
 	t_philo						*tmp;
 	static int					j;
-	static pthread_mutex_t		lock;
 
 	i = j;
-	if (i == 0)
-		pthread_mutex_init(&lock, NULL);
 	while (i < args[0])
 	{
 		tmp = malloc(sizeof(t_philo));
 		tmp->args = args;
 		tmp->forks = forks;
 		tmp->number = i;
-		tmp->lock = &lock;
+		tmp->lock = locks;
 		pthread_create(threads + i, NULL, philosopher, tmp);
 		pthread_detach(threads[i]);
 		i += 2;
 	}
 	j = 1;
-	return (&lock);
+	return ;
 }
