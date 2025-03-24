@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/03/23 22:27:02 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/03/24 00:59:59 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ void	*philosopher(void	*arg)
 	int					forks_index[2];
 	int					i;
 	pthread_mutex_t		*lock;
+	int					tmp;
 
 	philo = (t_philo *)arg;
 	if (philo->number == 0)
@@ -81,11 +82,14 @@ void	*philosopher(void	*arg)
 		forks_index[0] = philo->number - 1;
 	forks_index[1] = philo->number;
 	i = 0;
-	while (i < philo->args[4])
+	pthread_mutex_lock(philo->lock);
+	tmp = philo->args[4];
+	pthread_mutex_unlock(philo->lock);
+	while (i < tmp)
 	{
 		if (check_forks(philo->lock, philo, forks_index) == 1)
 			(eat_then_sleep(philo, forks_index, philo->lock), i++);
-		if (die(philo, forks_index, philo->lock) == 1)
+		else if (die(philo, forks_index, philo->lock) == 1)
 			break ;
 	}
 	increment(philo, i);
