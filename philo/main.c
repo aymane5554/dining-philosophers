@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/03/24 02:07:43 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/03/24 03:35:36 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	die(t_philo	*philo, int forks_index[2], pthread_mutex_t *lock)
 	while (!check_forks(lock, philo, forks_index))
 	{
 		gettimeofday(&tv, NULL);
-		if (((tv.tv_sec * 1000) + tv.tv_usec / 1000) - timestamp(NULL, lock + 2)
+		if (((tv.tv_sec * 1000) + tv.tv_usec / 1000) - philo->age
 		> tmp)
 		{
 			pthread_mutex_lock(lock);
@@ -43,7 +43,7 @@ void	eat_then_sleep(t_philo	*philo, int forks_index[2],
 	int					arg;
 
 	gettimeofday(&tv, NULL);
-	printf("%li %i has taken a fork\n", timestamp(&tv, lock + 2), philo->number + 1);
+	printf("%lli %i has taken a fork\n", timestamp(&tv, lock + 2), philo->number + 1);
 	pthread_mutex_lock(lock + 1);
 	philo->forks[forks_index[1]] = 'u';
 	philo->forks[forks_index[0]] = 'u';
@@ -51,7 +51,8 @@ void	eat_then_sleep(t_philo	*philo, int forks_index[2],
 	pthread_mutex_lock(lock);
 	arg = philo->args[2];
 	pthread_mutex_unlock(lock);
-	printf("%li %i is eating\n", timestamp(&tv, lock  + 2), philo->number + 1);
+	printf("%lli %i is eating\n", timestamp(&tv, lock  + 2), philo->number + 1);
+	philo->age = timenow();
 	usleep(arg * 1000);
 	pthread_mutex_lock(lock + 1);
 	philo->forks[forks_index[1]] = 'a';
@@ -61,10 +62,10 @@ void	eat_then_sleep(t_philo	*philo, int forks_index[2],
 	arg = philo->args[3];
 	pthread_mutex_unlock(lock);
 	gettimeofday(&tv, NULL);
-	printf("%li %i is sleeping\n", timestamp(&tv, lock + 2), philo->number + 1);
+	printf("%lli %i is sleeping\n", timestamp(&tv, lock + 2), philo->number + 1);
 	usleep(arg * 1000);
 	gettimeofday(&tv, NULL);
-	printf("%li %i is thinking\n", timestamp(&tv, lock + 2), philo->number + 1);
+	printf("%lli %i is thinking\n", timestamp(&tv, lock + 2), philo->number + 1);
 }
 
 void	*philosopher(void	*arg)
@@ -76,6 +77,7 @@ void	*philosopher(void	*arg)
 	int					tmp;
 
 	philo = (t_philo *)arg;
+	philo->age = timestamp(NULL, philo->lock);
 	if (philo->number == 0)
 		forks_index[0] = philo->args[0] - 1;
 	else
@@ -116,7 +118,7 @@ void	check_death(long long *args, pthread_mutex_t *lock)
 	tmp = args[5];
 	pthread_mutex_unlock(lock);
 	if (tmp != 0)
-		printf("%li %i died\n", timestamp((struct timeval *)args[7], lock + 2), tmp);
+		printf("%lli %i died\n", timestamp((struct timeval *)args[7], lock + 2), tmp);
 }
 
 //	args[0] = number_of_philosophers

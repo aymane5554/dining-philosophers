@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:32 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/03/24 00:24:08 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/03/24 03:19:40 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,4 +77,14 @@ void	make_threads(pthread_t	*threads, long long *args, char *forks, pthread_mute
 	}
 	j = 1;
 	return ;
+}
+
+long long timenow(void)
+{
+	struct timeval		tv;
+	long long			time;
+
+	gettimeofday(&tv, NULL);
+	time = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+	return (time);
 }

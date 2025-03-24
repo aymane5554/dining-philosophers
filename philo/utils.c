@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 00:29:46 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/03/22 21:42:20 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/03/24 03:31:57 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,12 @@ int	finish(pthread_mutex_t *lock, long long *args, char *forks, pthread_t *threa
 	return (0);
 }
 
-long	timestamp(struct timeval *arg_tv, pthread_mutex_t *lock)
+long long	timestamp(struct timeval *arg_tv, pthread_mutex_t *lock)
 {
 	static struct timeval		tv;
 	static int					i;
-	long						time;
-	long						time2;
+	long long					time;
+	long long					time2;
 
 	pthread_mutex_lock(lock);
 	if (i == 0)
