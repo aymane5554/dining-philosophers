@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/03/24 03:35:36 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/04/04 10:14:46 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ char	die(t_philo	*philo, int forks_index[2], pthread_mutex_t *lock)
 	pthread_mutex_lock(lock);
 	tmp = philo->args[1];
 	pthread_mutex_unlock(lock);
+	gettimeofday(&tv, NULL);
+	printf("%lli %i is thinking\n", timestamp(&tv, lock + 2), philo->number + 1);
 	while (!check_forks(lock, philo, forks_index))
 	{
 		gettimeofday(&tv, NULL);
@@ -64,8 +66,6 @@ void	eat_then_sleep(t_philo	*philo, int forks_index[2],
 	gettimeofday(&tv, NULL);
 	printf("%lli %i is sleeping\n", timestamp(&tv, lock + 2), philo->number + 1);
 	usleep(arg * 1000);
-	gettimeofday(&tv, NULL);
-	printf("%lli %i is thinking\n", timestamp(&tv, lock + 2), philo->number + 1);
 }
 
 void	*philosopher(void	*arg)
@@ -77,7 +77,7 @@ void	*philosopher(void	*arg)
 	int					tmp;
 
 	philo = (t_philo *)arg;
-	philo->age = timestamp(NULL, philo->lock);
+	philo->age = timenow();
 	if (philo->number == 0)
 		forks_index[0] = philo->args[0] - 1;
 	else
@@ -150,7 +150,7 @@ int	main(int argc, char **argv)
 	threads = malloc(args[0] * sizeof(pthread_t));
 	memset(forks, 'a', (args[0] * sizeof(char)));
 	if (args[0] == 1)
-		return (dying_alone(threads, args, forks), 0);
+		return (dying(threads, args, forks), 0);
 	args[7] = (long long)&tv;
 	locks = creating_locks();
 	make_threads(threads, args, forks, locks);

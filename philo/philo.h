@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:25:01 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/03/24 03:32:14 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/04/04 10:12:34 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ typedef struct s_philo
 }	t_philo;
 
 int				check_forks(pthread_mutex_t *lock, t_philo *philo, int forks_index[2]);
-void			dying_alone(pthread_t *threads, long long *args, char *forks);
+void			dying(pthread_t *threads, long long *args, char *forks);
 int				finish(pthread_mutex_t *lock, long long *args, char *forks,
 					pthread_t *threads);
 long long		timestamp(struct timeval *arg_tv, pthread_mutex_t *lock);

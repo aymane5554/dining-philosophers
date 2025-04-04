@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 00:29:46 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/03/24 03:31:57 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/04/04 10:12:47 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	check_forks(pthread_mutex_t *lock, t_philo *philo, int forks_index[2])
 	return (0);
 }
 
-void	dying_alone(pthread_t *threads, long long *args, char *forks)
+void	dying(pthread_t *threads, long long *args, char *forks)
 {
 	usleep(args[1] * 1000);
 	printf("%lli %i died\n", args[1], 1);
@@ -48,14 +48,14 @@ long long	timestamp(struct timeval *arg_tv, pthread_mutex_t *lock)
 	long long					time;
 	long long					time2;
 
+	if (arg_tv == NULL || lock == NULL)
+		return (-1);
 	pthread_mutex_lock(lock);
 	if (i == 0)
 		gettimeofday(&tv, NULL);
-	time = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
-	if (arg_tv == NULL)
-		return (pthread_mutex_unlock(lock), time);
-	time2 = (arg_tv->tv_sec * 1000) + (arg_tv->tv_usec / 1000);
 	i = 1;
+	time = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+	time2 = (arg_tv->tv_sec * 1000) + (arg_tv->tv_usec / 1000);
 	pthread_mutex_unlock(lock);
 	return (time2 - time);
 }
