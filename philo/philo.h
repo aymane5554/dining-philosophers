@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:25:01 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/04/04 10:12:34 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/04/04 10:21:48 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@
 int					ft_atoi(const char *ptr);
 long long			*get_args(int argc, char **argv);
 void				error(void);
-void				make_threads(pthread_t	*threads, long long *args, char *forks, pthread_mutex_t	*locks);
+void				make_threads(pthread_t	*threads, long long *args,
+						char *forks, pthread_mutex_t	*locks);
 void				*philosopher(void	*arg);
 
 typedef struct s_philo
@@ -35,13 +36,14 @@ typedef struct s_philo
 	pthread_mutex_t		*lock;
 }	t_philo;
 
-int				check_forks(pthread_mutex_t *lock, t_philo *philo, int forks_index[2]);
-void			dying(pthread_t *threads, long long *args, char *forks);
-int				finish(pthread_mutex_t *lock, long long *args, char *forks,
-					pthread_t *threads);
-long long		timestamp(struct timeval *arg_tv, pthread_mutex_t *lock);
-void			increment(t_philo *philo, int i);
-pthread_mutex_t	*creating_locks(void);
-long long 		timenow(void);
+int					check_forks(pthread_mutex_t *lock,
+						t_philo *philo, int forks_index[2]);
+void				dying(pthread_t *threads, long long *args, char *forks);
+int					finish(pthread_mutex_t *lock, long long *args, char *forks,
+						pthread_t *threads);
+long long			timestamp(struct timeval *arg_tv, pthread_mutex_t *lock);
+void				increment(t_philo *philo, int i);
+pthread_mutex_t		*creating_locks(void);
+long long			timenow(void);
 
 #endif

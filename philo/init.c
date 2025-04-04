@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:32 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/03/24 03:19:40 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/04/04 10:19:42 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,8 @@ pthread_mutex_t	*creating_locks(void)
 	return (locks);
 }
 
-void	make_threads(pthread_t	*threads, long long *args, char *forks, pthread_mutex_t	*locks)
+void	make_threads(pthread_t	*threads, long long *args,
+		char *forks, pthread_mutex_t	*locks)
 {
 	int							i;
 	t_philo						*tmp;
@@ -79,7 +80,7 @@ void	make_threads(pthread_t	*threads, long long *args, char *forks, pthread_mute
 	return ;
 }
 
-long long timenow(void)
+long long	timenow(void)
 {
 	struct timeval		tv;
 	long long			time;

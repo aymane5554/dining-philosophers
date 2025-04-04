@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 00:29:46 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/04/04 10:12:47 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/04/04 10:16:21 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ void	dying(pthread_t *threads, long long *args, char *forks)
 	free(forks);
 }
 
-int	finish(pthread_mutex_t *lock, long long *args, char *forks, pthread_t *threads)
+int	finish(pthread_mutex_t *lock, long long *args,
+		char *forks, pthread_t *threads)
 {
 	pthread_mutex_lock(lock);
 	free(args);
