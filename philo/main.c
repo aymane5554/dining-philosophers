@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/04/05 16:18:26 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/04/06 19:09:01 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ char	die(t_philo	*philo, int forks_index[2], pthread_mutex_t *lock)
 	{
 		gettimeofday(&tv, NULL);
 		if (((tv.tv_sec * 1000) + tv.tv_usec / 1000) - philo->age
-			> tmp)
+		> tmp)
 		{
 			pthread_mutex_lock(lock);
 			gettimeofday((struct timeval *)philo->args[7], NULL);
@@ -34,6 +34,7 @@ char	die(t_philo	*philo, int forks_index[2], pthread_mutex_t *lock)
 			pthread_mutex_unlock(lock);
 			return (1);
 		}
+		usleep(100);
 	}
 	return (0);
 }
@@ -45,10 +46,6 @@ void	eat_then_sleep(t_philo	*philo, int forks_index[2],
 	int					arg;
 
 	gettimeofday(&tv, NULL);
-	pthread_mutex_lock(lock);
-	arg = philo->args[2];
-	pthread_mutex_unlock(lock);
-	pthread_mutex_lock(lock + 1);
 	printf("%lli %i has taken a fork\n",
 		timestamp(&tv, lock + 2), philo->number + 1);
 	printf("%lli %i has taken a fork\n",
@@ -56,6 +53,7 @@ void	eat_then_sleep(t_philo	*philo, int forks_index[2],
 	philo->forks[forks_index[1]] = 'u';
 	philo->forks[forks_index[0]] = 'u';
 	printf("%lli %i is eating\n", timestamp(&tv, lock + 2), philo->number + 1);
+	arg = philo->args[2];
 	pthread_mutex_unlock(lock + 1);
 	philo->age = timenow();
 	usleep(arg * 1000);
@@ -74,8 +72,11 @@ void	life_death_circle(t_philo *philo, int forks_index[2])
 {
 	while (1)
 	{
-		if (check_forks(philo->lock, philo, forks_index) == 1)
+		pthread_mutex_lock(philo->lock + 1);
+		if (check_forks2(philo, forks_index) == 1)
 			eat_then_sleep(philo, forks_index, philo->lock);
+		else
+			pthread_mutex_unlock(philo->lock + 1);
 		if (die(philo, forks_index, philo->lock) == 1)
 			break ;
 	}
@@ -88,11 +89,14 @@ int	life_death_circle2(t_philo *philo, int forks_index[2], int tmp)
 	i = 0;
 	while (i < tmp)
 	{
-		if (check_forks(philo->lock, philo, forks_index) == 1)
+		pthread_mutex_lock(philo->lock + 1);
+		if (check_forks2(philo, forks_index) == 1)
 		{
 			eat_then_sleep(philo, forks_index, philo->lock);
 			i++;
 		}
+		else
+			pthread_mutex_unlock(philo->lock + 1);
 		if (die(philo, forks_index, philo->lock) == 1)
 			break ;
 	}
@@ -165,9 +169,7 @@ void	check_death(long long *args, pthread_mutex_t *lock)
 //  locks[2] = mutex lock for tv
 
 // TODO: 
-//      odd number of philosophers : DONE
 //      infinte eating : IDK
-//      take one fork
 
 int	main(int argc, char **argv)
 {

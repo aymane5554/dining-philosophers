@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 00:29:46 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/04/05 12:33:35 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/04/06 18:14:51 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,14 @@ int	check_forks(pthread_mutex_t *lock, t_philo *philo, int forks_index[2])
 		&& philo->forks[forks_index[1]] == 'a')
 		return (pthread_mutex_unlock(lock + 1), 1);
 	pthread_mutex_unlock(lock + 1);
+	return (0);
+}
+
+int	check_forks2(t_philo *philo, int forks_index[2])
+{
+	if (philo->forks[forks_index[0]] == 'a'
+		&& philo->forks[forks_index[1]] == 'a')
+		return (1);
 	return (0);
 }
 
@@ -35,8 +43,8 @@ int	finish(pthread_mutex_t *lock, long long *args,
 		char *forks, pthread_t *threads)
 {
 	pthread_mutex_lock(lock);
-	free(args);
 	pthread_mutex_lock(lock + 1);
+	free(args);
 	free(forks);
 	free(threads);
 	return (0);
