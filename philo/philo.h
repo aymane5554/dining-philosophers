@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:25:01 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/04/06 18:14:57 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/04/06 19:22:01 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void				make_threads(pthread_t	*threads, long long *args,
 void				*philosopher(void	*arg);
 int					check_forks(pthread_mutex_t *lock,
 						t_philo *philo, int forks_index[2]);
-void				dying(pthread_t *threads, long long *args, char *forks);
+void				starving(pthread_t *threads, long long *args, char *forks);
 int					finish(pthread_mutex_t *lock, long long *args, char *forks,
 						pthread_t *threads);
 long long			timestamp(struct timeval *arg_tv, pthread_mutex_t *lock);
@@ -46,5 +46,9 @@ pthread_mutex_t		*creating_locks(void);
 long long			timenow(void);
 int					check_forks2(
 						t_philo *philo, int forks_index[2]);
+void				eat_then_sleep(t_philo	*philo, int forks_index[2],
+						pthread_mutex_t *lock);
+char				die(t_philo	*philo, int forks_index[2],
+						pthread_mutex_t *lock);
 
 #endif

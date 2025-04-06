@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 00:29:46 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/04/06 18:14:51 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/04/06 19:16:39 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,6 @@ int	check_forks2(t_philo *philo, int forks_index[2])
 		&& philo->forks[forks_index[1]] == 'a')
 		return (1);
 	return (0);
-}
-
-void	dying(pthread_t *threads, long long *args, char *forks)
-{
-	usleep(args[1] * 1000);
-	printf("%lli %i died\n", args[1], 1);
-	free(threads);
-	free(args);
-	free(forks);
 }
 
 int	finish(pthread_mutex_t *lock, long long *args,
