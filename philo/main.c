@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/04/06 19:22:45 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/04/09 17:03:03 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ void	check_death(long long *args, pthread_mutex_t *lock)
 			break ;
 		}
 		pthread_mutex_unlock(lock);
+		usleep(100);
 	}
 	pthread_mutex_lock(lock);
 	tmp = args[5];
@@ -109,9 +110,9 @@ void	check_death(long long *args, pthread_mutex_t *lock)
 //			finished eating (it equals 0 in the beginning)
 // 	args[7] = time of death of a philosopher
 //	(is a timeval pointer casted to long long)
-//  locks[0] = mutex lock for args
-//  locks[1] = mutex lock for forks
-//  locks[2] = mutex lock for tv
+//	locks[0] = mutex lock for args
+//	locks[1] = mutex lock for forks
+//	locks[2] = mutex lock for tv
 
 int	main(int argc, char **argv)
 {

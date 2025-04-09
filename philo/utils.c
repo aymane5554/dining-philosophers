@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 00:29:46 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/04/06 19:16:39 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/04/09 17:00:29 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,18 +43,20 @@ int	finish(pthread_mutex_t *lock, long long *args,
 
 long long	timestamp(struct timeval *arg_tv, pthread_mutex_t *lock)
 {
-	static struct timeval		tv;
-	static int					i;
-	long long					time;
-	long long					time2;
+	struct timeval		tv;
+	static int			i;
+	static long long	time;
+	long long			time2;
 
 	if (arg_tv == NULL || lock == NULL)
 		return (-1);
 	pthread_mutex_lock(lock);
 	if (i == 0)
+	{
 		gettimeofday(&tv, NULL);
+		time = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+	}
 	i = 1;
-	time = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
 	time2 = (arg_tv->tv_sec * 1000) + (arg_tv->tv_usec / 1000);
 	pthread_mutex_unlock(lock);
 	return (time2 - time);

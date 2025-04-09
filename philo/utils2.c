@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 19:14:39 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/04/06 19:22:28 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/04/09 17:11:37 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ char	die(t_philo	*philo, int forks_index[2], pthread_mutex_t *lock)
 			pthread_mutex_unlock(lock);
 			return (1);
 		}
-		usleep(100);
 	}
 	return (0);
 }
