@@ -6,24 +6,28 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/04/09 17:03:03 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/04/09 18:04:02 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	life_death_circle(t_philo *philo, int forks_index[2])
+int	life_death_circle(t_philo *philo, int forks_index[2])
 {
 	while (1)
 	{
 		pthread_mutex_lock(philo->lock + 1);
 		if (check_forks2(philo, forks_index) == 1)
-			eat_then_sleep(philo, forks_index, philo->lock);
+		{
+			if (!eat_then_sleep(philo, forks_index, philo->lock))
+				return (0);
+		}
 		else
 			pthread_mutex_unlock(philo->lock + 1);
-		if (die(philo, forks_index, philo->lock) == 1)
+		if (think(philo, forks_index, philo->lock) == 1)
 			break ;
 	}
+	return (1);
 }
 
 int	life_death_circle2(t_philo *philo, int forks_index[2], int tmp)
@@ -36,24 +40,24 @@ int	life_death_circle2(t_philo *philo, int forks_index[2], int tmp)
 		pthread_mutex_lock(philo->lock + 1);
 		if (check_forks2(philo, forks_index) == 1)
 		{
-			eat_then_sleep(philo, forks_index, philo->lock);
+			if (!eat_then_sleep(philo, forks_index, philo->lock))
+				return (0);
 			i++;
 		}
 		else
 			pthread_mutex_unlock(philo->lock + 1);
-		if (die(philo, forks_index, philo->lock) == 1)
+		if (think(philo, forks_index, philo->lock) == 1)
 			break ;
 	}
-	return (i);
+	increment(philo, i);
+	return (1);
 }
 
 void	*philosopher(void	*arg)
 {
 	t_philo				*philo;
 	int					forks_index[2];
-	pthread_mutex_t		*lock;
 	int					tmp;
-	int					i;
 
 	philo = (t_philo *)arg;
 	philo->age = timenow();
@@ -65,15 +69,16 @@ void	*philosopher(void	*arg)
 	(pthread_mutex_lock(philo->lock), tmp = philo->args[4]);
 	pthread_mutex_unlock(philo->lock);
 	if (tmp < 1)
-		life_death_circle(philo, forks_index);
+	{
+		if (!life_death_circle(philo, forks_index))
+			return (exit_thread(philo), NULL);
+	}
 	else
 	{
-		i = life_death_circle2(philo, forks_index, tmp);
-		increment(philo, i);
+		if (!life_death_circle2(philo, forks_index, tmp))
+			return (exit_thread(philo), NULL);
 	}
-	lock = philo->lock;
-	pthread_mutex_lock(lock);
-	return (free(arg), pthread_mutex_unlock(lock), NULL);
+	return (exit_thread(philo), NULL);
 }
 
 void	check_death(long long *args, pthread_mutex_t *lock)

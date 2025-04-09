@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:25:01 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/04/06 19:22:01 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/04/09 18:04:06 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,11 @@ pthread_mutex_t		*creating_locks(void);
 long long			timenow(void);
 int					check_forks2(
 						t_philo *philo, int forks_index[2]);
-void				eat_then_sleep(t_philo	*philo, int forks_index[2],
+int					eat_then_sleep(t_philo	*philo, int forks_index[2],
 						pthread_mutex_t *lock);
-char				die(t_philo	*philo, int forks_index[2],
+char				think(t_philo	*philo, int forks_index[2],
 						pthread_mutex_t *lock);
+int					ft_usleep(int	ms, int	time2die);
+void				exit_thread(t_philo *philo);
 
 #endif
