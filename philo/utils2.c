@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 19:14:39 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/04/09 18:04:13 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/04/10 10:43:49 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	think(t_philo	*philo, int forks_index[2], pthread_mutex_t *lock)
 	while (!check_forks(lock, philo, forks_index))
 	{
 		gettimeofday(&tv, NULL);
-		if (((tv.tv_sec * 1000) + tv.tv_usec / 1000) - philo->age
+		if (((tv.tv_sec * 1000) + (tv.tv_usec / 1000)) - philo->age
 			> tmp)
 		{
 			pthread_mutex_lock(lock);
@@ -50,8 +50,8 @@ int	eat_then_sleep(t_philo	*philo, int forks_index[2],
 		timestamp(&tv, lock + 2), philo->number + 1);
 	printf("%lli %i has taken a fork\n",
 		timestamp(&tv, lock + 2), philo->number + 1);
-	philo->forks[forks_index[1]] = 'u';
-	philo->forks[forks_index[0]] = 'u';
+	philo->forks[forks_index[1]] = philo->number;
+	philo->forks[forks_index[0]] = philo->number;
 	printf("%lli %i is eating\n", timestamp(&tv, lock + 2), philo->number + 1);
 	arg = philo->args[2];
 	arg2 = philo->args[1];
