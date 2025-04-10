@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 19:14:39 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/04/10 13:46:56 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/04/10 14:00:18 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,18 +46,7 @@ int	eat_then_sleep(t_philo	*philo, int forks_index[2],
 	int					arg2;
 
 	gettimeofday(&tv, NULL);
-	if (philo->forks[forks_index[1]] == 'a')
-	{
-		philo->forks[forks_index[1]] = philo->number;
-		printf("%lli %i has taken a fork\n",
-			timestamp(&tv, lock + 2), philo->number + 1);
-	}
-	if (philo->forks[forks_index[0]] == 'a')
-	{
-		philo->forks[forks_index[0]] = philo->number;
-		printf("%lli %i has taken a fork\n",
-			timestamp(&tv, lock + 2), philo->number + 1);
-	}
+	picking_forks(&tv, philo, forks_index);
 	printf("%lli %i is eating\n", timestamp(&tv, lock + 2), philo->number + 1);
 	arg = philo->args[2];
 	arg2 = philo->args[1];
@@ -88,9 +77,9 @@ void	starving(pthread_t *threads, long long *args, char *forks)
 	free(forks);
 }
 
-int	ft_usleep(int	ms, int	time2die)
+int	ft_usleep(int ms, int time2die)
 {
-	struct timeval tv;
+	struct timeval	tv;
 	long long		start;
 	long long		now;
 
@@ -108,7 +97,7 @@ int	ft_usleep(int	ms, int	time2die)
 	return (1);
 }
 
-void exit_thread(t_philo *philo)
+void	exit_thread(t_philo *philo)
 {
 	pthread_mutex_t		*lock;
 

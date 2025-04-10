@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:25:01 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/04/09 18:04:06 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/04/10 14:00:32 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,9 @@ int					eat_then_sleep(t_philo	*philo, int forks_index[2],
 						pthread_mutex_t *lock);
 char				think(t_philo	*philo, int forks_index[2],
 						pthread_mutex_t *lock);
-int					ft_usleep(int	ms, int	time2die);
+int					ft_usleep(int ms, int time2die);
 void				exit_thread(t_philo *philo);
+void				picking_forks(struct timeval *tv, t_philo *philo,
+						int forks_index[2]);
 
 #endif
