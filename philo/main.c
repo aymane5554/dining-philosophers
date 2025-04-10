@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/04/10 10:45:16 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/04/10 13:28:22 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	life_death_circle2(t_philo *philo, int forks_index[2], int tmp)
 		}
 		else
 			pthread_mutex_unlock(philo->lock + 1);
-		if (think(philo, forks_index, philo->lock) == 1)
+		if (i < tmp && think(philo, forks_index, philo->lock) == 1)
 			return (0);
 	}
 	increment(philo, i);
