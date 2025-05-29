@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/05/29 16:20:06 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/05/29 17:00:34 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ int	eating(t_philo *philo, int coordinates[2])
 	pthread_mutex_unlock(philo->lock + 2 + coordinates[1]);
 	if (ft_usleep(philo->args[3], philo->args[1], philo->age))
 		return (1);
+	return (0);
 }
 
 char	pick_forks(t_philo *philo, int coordinates[2], int	*picked)
@@ -107,7 +108,7 @@ char	pick_forks(t_philo *philo, int coordinates[2], int	*picked)
 	pthread_mutex_lock(philo->lock + 2 + coordinates[0]);
 	if (philo->forks[coordinates[0]] == 'a')
 	{
-		philo->forks = 'u';
+		philo->forks[coordinates[0]] = 'u';
 		tmp = coordinates[0];
 		picked_forks++;
 	}
@@ -115,14 +116,14 @@ char	pick_forks(t_philo *philo, int coordinates[2], int	*picked)
 	pthread_mutex_lock(philo->lock + 2 + coordinates[1]);
 	if (philo->forks[coordinates[1]] == 'a')
 	{
-		philo->forks = 'u';
+		philo->forks[coordinates[1]] = 'u';
 		tmp = coordinates[1];
 		picked_forks++;
 	}
 	pthread_mutex_unlock(philo->lock + 2 + coordinates[1]);
-	if (picked && pick_forks == 1)
+	if (picked && picked_forks == 1)
 		*picked = tmp;
-	return (pick_forks);
+	return (picked_forks);
 }
 
 void	*philosopher(void	*arg)

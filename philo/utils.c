@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 00:29:46 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/05/29 16:00:13 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/05/29 17:01:09 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	ft_usleep(int ms, int time2die, long long last_meal)
 	long long		now;
 
 	gettimeofday(&tv, NULL);
-	start = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+	start = last_meal;
 	now = start;
 	while (now - start < ms)
 	{
