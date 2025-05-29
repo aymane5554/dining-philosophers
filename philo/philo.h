@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:25:01 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/05/29 14:46:43 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/05/29 16:00:32 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,5 @@ void				starving(pthread_t *threads, long long *args, char *forks);
 long long			timestamp(struct timeval *arg_tv, pthread_mutex_t *lock);
 pthread_mutex_t		*creating_locks(int no_philos);
 long long			timenow(void);
-int					ft_usleep(int ms, int time2die);
+int					ft_usleep(int ms, int time2die, long long last_meal);
 #endif

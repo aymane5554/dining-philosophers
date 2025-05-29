@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:32 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/05/29 14:33:17 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/05/29 15:34:24 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,10 @@ void	make_threads(pthread_t	*threads, long long *args,
 	int							i;
 	t_philo						*tmp;
 	static int					j;
+	long long					time;
 
 	i = j;
+	time = timenow();
 	while (i < args[0])
 	{
 		tmp = malloc(sizeof(t_philo));
@@ -78,6 +80,7 @@ void	make_threads(pthread_t	*threads, long long *args,
 		tmp->forks = forks;
 		tmp->number = i;
 		tmp->lock = locks;
+		tmp->age = time;
 		pthread_create(threads + i, NULL, philosopher, tmp);
 		pthread_detach(threads[i]);
 		i += 2;

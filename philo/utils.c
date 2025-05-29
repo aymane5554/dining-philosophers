@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 00:29:46 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/05/29 14:43:01 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/05/29 16:00:13 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	starving(pthread_t *threads, long long *args, char *forks)
 	free(forks);
 }
 
-int	ft_usleep(int ms, int time2die)
+int	ft_usleep(int ms, int time2die, long long last_meal)
 {
 	struct timeval	tv;
 	long long		start;
@@ -54,10 +54,10 @@ int	ft_usleep(int ms, int time2die)
 	while (now - start < ms)
 	{
 		if (now - start >= time2die)
-			return (0);
+			return (1);
 		usleep(100);
 		gettimeofday(&tv, NULL);
 		now = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
 	}
-	return (1);
+	return (0);
 }
