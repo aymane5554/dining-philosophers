@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:32 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/04/06 17:47:16 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/05/29 14:33:17 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,20 @@ void	error(void)
 	write(2, "error\n", 6);
 }
 
-pthread_mutex_t	*creating_locks(void)
+pthread_mutex_t	*creating_locks(int no_philos)
 {
 	pthread_mutex_t	*locks;
+	int				i;
 
-	locks = malloc(3 * sizeof(pthread_mutex_t));
+	i = 0;
+	locks = malloc((no_philos + 2) * sizeof(pthread_mutex_t));
 	pthread_mutex_init(locks, NULL);
 	pthread_mutex_init(locks + 1, NULL);
-	pthread_mutex_init(locks + 2, NULL);
+	while (i < no_philos)
+	{
+		pthread_mutex_init(locks + 2 + i, NULL);
+		i++;
+	}
 	return (locks);
 }
 

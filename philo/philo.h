@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:25:01 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/04/10 14:00:32 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/05/29 14:34:26 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int					finish(pthread_mutex_t *lock, long long *args, char *forks,
 						pthread_t *threads);
 long long			timestamp(struct timeval *arg_tv, pthread_mutex_t *lock);
 void				increment(t_philo *philo, int i);
-pthread_mutex_t		*creating_locks(void);
+pthread_mutex_t		*creating_locks(int no_philos);
 long long			timenow(void);
 int					check_forks2(
 						t_philo *philo, int forks_index[2]);

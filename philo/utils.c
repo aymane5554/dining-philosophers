@@ -6,61 +6,11 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 00:29:46 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/04/10 13:55:10 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/05/29 14:43:01 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-int	check_forks(pthread_mutex_t *lock, t_philo *philo, int forks_index[2])
-{
-	struct timeval		tv;
-
-	gettimeofday(&tv, NULL);
-	pthread_mutex_lock(lock + 1);
-	if (philo->forks[forks_index[0]] == 'a'
-		&& philo->forks[forks_index[1]] != 'a')
-	{
-		philo->forks[forks_index[0]] = philo->number;
-		printf("%lli %i has taken a fork\n",
-			timestamp(&tv, lock + 2), philo->number + 1);
-	}
-	if (philo->forks[forks_index[0]] != 'a'
-		&& philo->forks[forks_index[1]] == 'a')
-	{
-		philo->forks[forks_index[1]] = philo->number;
-		printf("%lli %i has taken a fork\n",
-			timestamp(&tv, lock + 2), philo->number + 1);
-	}
-	if ((philo->forks[forks_index[0]] == 'a'
-			|| philo->forks[forks_index[0]] == philo->number)
-		&& (philo->forks[forks_index[1]] == 'a'
-			|| philo->forks[forks_index[1]] == philo->number))
-		return (pthread_mutex_unlock(lock + 1), 1);
-	pthread_mutex_unlock(lock + 1);
-	return (0);
-}
-
-int	check_forks2(t_philo *philo, int forks_index[2])
-{
-	if ((philo->forks[forks_index[0]] == 'a'
-			|| philo->forks[forks_index[0]] == philo->number)
-		&& (philo->forks[forks_index[1]] == 'a'
-			|| philo->forks[forks_index[1]] == philo->number))
-		return (1);
-	return (0);
-}
-
-int	finish(pthread_mutex_t *lock, long long *args,
-		char *forks, pthread_t *threads)
-{
-	pthread_mutex_lock(lock);
-	pthread_mutex_lock(lock + 1);
-	free(args);
-	free(forks);
-	free(threads);
-	return (0);
-}
 
 long long	timestamp(struct timeval *arg_tv, pthread_mutex_t *lock)
 {
@@ -83,10 +33,31 @@ long long	timestamp(struct timeval *arg_tv, pthread_mutex_t *lock)
 	return (time2 - time);
 }
 
-void	increment(t_philo *philo, int i)
+void	starving(pthread_t *threads, long long *args, char *forks)
 {
-	pthread_mutex_lock(philo->lock);
-	if (i == philo->args[4])
-		philo->args[6]++;
-	pthread_mutex_unlock(philo->lock);
+	usleep(args[1] * 1000);
+	printf("%lli %i died\n", args[1], 1);
+	free(threads);
+	free(args);
+	free(forks);
+}
+
+int	ft_usleep(int ms, int time2die)
+{
+	struct timeval	tv;
+	long long		start;
+	long long		now;
+
+	gettimeofday(&tv, NULL);
+	start = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+	now = start;
+	while (now - start < ms)
+	{
+		if (now - start >= time2die)
+			return (0);
+		usleep(100);
+		gettimeofday(&tv, NULL);
+		now = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+	}
+	return (1);
 }
