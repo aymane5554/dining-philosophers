@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/05/29 17:00:34 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/05/29 18:01:56 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	wait_forks(t_philo *philo, int coordinates[2])
 	int	count;
 
 	count = 0;
-	while (philo->age - timenow() < philo->args[1])
+	while (timenow() - philo->age < philo->args[1])
 	{
 		if (philo->forks[coordinates[0]] == 'a')
 		{
@@ -69,21 +69,23 @@ int	wait_fork(t_philo *philo, int coordinates[2], int picked)
 		fork_needed = coordinates[1];
 	if (picked == coordinates[1])
 		fork_needed = coordinates[0];
-	while (philo->age - timenow() < philo->args[1])
+	while (timenow() - philo->age < philo->args[1])
 	{
 		if (philo->forks[fork_needed] == 'a')
 		{
 			pthread_mutex_lock(philo->lock + 2 + fork_needed);
 			philo->forks[fork_needed] = 'u';
 			pthread_mutex_unlock(philo->lock + 2 + fork_needed);
+			return (0);
 		}
 		usleep(100);
 	}
-	return (0);
+	return (1);
 }
 
 int	eating(t_philo *philo, int coordinates[2])
 {
+	printf("%d eating\n", philo->number);
 	philo->age = timenow();
 	if (ft_usleep(philo->args[2], philo->args[1], philo->age))
 		return (1);
@@ -93,8 +95,10 @@ int	eating(t_philo *philo, int coordinates[2])
 	pthread_mutex_lock(philo->lock + 2 + coordinates[1]);
 	philo->forks[coordinates[1]] = 'a';
 	pthread_mutex_unlock(philo->lock + 2 + coordinates[1]);
+	printf("%d sleeping\n", philo->number);
 	if (ft_usleep(philo->args[3], philo->args[1], philo->age))
 		return (1);
+	printf("%d thinking\n", philo->number);
 	return (0);
 }
 
@@ -148,7 +152,14 @@ void	*philosopher(void	*arg)
 		if (picked_forks == 2)
 		{
 			if (eating(philo, coordinates))
-				return (NULL); // free leaks
+			{
+				pthread_mutex_lock(philo->lock);
+				philo->args[5] = philo->number;
+				philo->args[7] = timenow();
+				pthread_mutex_unlock(philo->lock);
+				free(philo);
+				return (NULL);
+			}
 			if (philo->args[4] != -1)
 				meals++;
 			picked_forks = 0;
@@ -157,11 +168,37 @@ void	*philosopher(void	*arg)
 		else
 		{
 			if (wait_fork(philo, coordinates, picked))
+			{
+				pthread_mutex_lock(philo->lock);
+				philo->args[5] = philo->number + 1;
+				philo->args[7] = timenow();
+				pthread_mutex_unlock(philo->lock);
+				free(philo);
 				return (NULL);
+			}
 			picked_forks = 2;
 		}
 	}
+	pthread_mutex_lock(philo->lock);
+	philo->args[6]++;
+	pthread_mutex_unlock(philo->lock);
 	return (NULL);
+}
+
+void	check_death(long long *args, pthread_mutex_t *lock)
+{
+	pthread_mutex_lock(lock);
+	while (!args[5] && args[6] != args[0])
+	{
+		pthread_mutex_unlock(lock);
+		sleep(1000);
+		pthread_mutex_lock(lock);
+	}
+	pthread_mutex_unlock(lock);
+	printf("%lld died\n", args[5]);
+	pthread_mutex_lock(lock);
+	free(args);
+	pthread_mutex_unlock(lock);
 }
 
 int	main(int argc, char **argv)
@@ -184,5 +221,6 @@ int	main(int argc, char **argv)
 	locks = creating_locks(args[0]);
 	make_threads(threads, args, forks, locks);
 	make_threads(threads, args, forks, locks);
+	check_death(args, locks);
 	return (0);
 }
