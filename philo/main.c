@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/05/29 14:41:07 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/05/29 14:45:50 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,11 @@
 //	locks[0] = mutex lock for args
 //	locks[1] = mutex lock for tv
 //	locks[n] = mutex lock for forks
+
+void	*philosopher(void	*arg)
+{
+	return (NULL);
+}
 
 int	main(int argc, char **argv)
 {

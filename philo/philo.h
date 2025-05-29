@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:25:01 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/05/29 14:34:26 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/05/29 14:46:43 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,24 +35,9 @@ void				error(void);
 void				make_threads(pthread_t	*threads, long long *args,
 						char *forks, pthread_mutex_t	*locks);
 void				*philosopher(void	*arg);
-int					check_forks(pthread_mutex_t *lock,
-						t_philo *philo, int forks_index[2]);
 void				starving(pthread_t *threads, long long *args, char *forks);
-int					finish(pthread_mutex_t *lock, long long *args, char *forks,
-						pthread_t *threads);
 long long			timestamp(struct timeval *arg_tv, pthread_mutex_t *lock);
-void				increment(t_philo *philo, int i);
 pthread_mutex_t		*creating_locks(int no_philos);
 long long			timenow(void);
-int					check_forks2(
-						t_philo *philo, int forks_index[2]);
-int					eat_then_sleep(t_philo	*philo, int forks_index[2],
-						pthread_mutex_t *lock);
-char				think(t_philo	*philo, int forks_index[2],
-						pthread_mutex_t *lock);
 int					ft_usleep(int ms, int time2die);
-void				exit_thread(t_philo *philo);
-void				picking_forks(struct timeval *tv, t_philo *philo,
-						int forks_index[2]);
-
 #endif
