@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/06/25 10:18:24 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/06/25 15:45:53 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,22 +224,23 @@ void	*philosopher(void	*arg)
 	pthread_mutex_lock(philo->lock);
 	philo->info[1]++;
 	pthread_mutex_unlock(philo->lock);
+	free(philo);
 	return (NULL);
 }
 
 void	check_death(const long long *args,
 			pthread_mutex_t *lock, long long *info)
 {
-	pthread_mutex_lock(lock);
-	while (!info[0] && info[1] != args[0])
+	while (1)
 	{
-		pthread_mutex_unlock(lock);
-		usleep(100);
 		pthread_mutex_lock(lock);
+		if (info[0] || info[1] == args[0])
+			break ;
+		pthread_mutex_unlock(lock);
+		usleep(1000);
 	}
 	if (info[0])
 		printf("%lld %lld died\n", info[2], info[0]);
-	free(info);
 }
 
 int	main(int argc, char **argv)
