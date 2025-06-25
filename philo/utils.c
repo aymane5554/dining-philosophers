@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 00:29:46 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/05/29 17:01:09 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/06/25 10:06:57 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,12 @@ long long	timestamp(struct timeval *arg_tv, pthread_mutex_t *lock)
 	return (time2 - time);
 }
 
-void	starving(pthread_t *threads, long long *args, char *forks)
+void	starving(pthread_t *threads, const long long *args, char *forks)
 {
 	usleep(args[1] * 1000);
 	printf("%lli %i died\n", args[1], 1);
 	free(threads);
-	free(args);
+	free((long long *)args);
 	free(forks);
 }
 
@@ -47,17 +47,21 @@ int	ft_usleep(int ms, int time2die, long long last_meal)
 	struct timeval	tv;
 	long long		start;
 	long long		now;
+	long long		age;
 
 	gettimeofday(&tv, NULL);
-	start = last_meal;
-	now = start;
+	age = last_meal;
+	now = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+	start = now;
 	while (now - start < ms)
 	{
-		if (now - start >= time2die)
+		if (now - age >= time2die)
 			return (1);
 		usleep(100);
 		gettimeofday(&tv, NULL);
 		now = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
 	}
+	if (now - age >= time2die)
+		return (1);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:32 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/05/29 15:34:24 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/06/19 16:01:15 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ long long	*get_args(int argc, char **argv)
 
 	if (argc < 5 || argc > 6)
 		return (NULL);
-	args = malloc(8 * sizeof(long long));
+	args = malloc(5 * sizeof(long long));
 	if (args == NULL)
 		return (NULL);
 	i = 1;
@@ -35,9 +35,6 @@ long long	*get_args(int argc, char **argv)
 	}
 	if (argc == 5)
 		args[4] = -1;
-	args[5] = 0;
-	args[6] = 0;
-	args[7] = 0;
 	return (args);
 }
 
@@ -63,16 +60,18 @@ pthread_mutex_t	*creating_locks(int no_philos)
 	return (locks);
 }
 
-void	make_threads(pthread_t	*threads, long long *args,
+long long	*make_threads(pthread_t	*threads, const long long *args,
 		char *forks, pthread_mutex_t	*locks)
 {
 	int							i;
 	t_philo						*tmp;
 	static int					j;
-	long long					time;
+	long long					*info;
 
 	i = j;
-	time = timenow();
+	info = malloc(4 * sizeof(long long));
+	memset(info, 0, 4 * sizeof(long long));
+	info[3] = timenow();
 	while (i < args[0])
 	{
 		tmp = malloc(sizeof(t_philo));
@@ -80,13 +79,13 @@ void	make_threads(pthread_t	*threads, long long *args,
 		tmp->forks = forks;
 		tmp->number = i;
 		tmp->lock = locks;
-		tmp->age = time;
+		tmp->info = info;
 		pthread_create(threads + i, NULL, philosopher, tmp);
 		pthread_detach(threads[i]);
 		i += 2;
 	}
 	j = 1;
-	return ;
+	return (info);
 }
 
 long long	timenow(void)
