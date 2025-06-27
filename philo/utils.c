@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 00:29:46 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/06/25 10:06:57 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/06/27 13:20:47 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,5 +63,16 @@ int	ft_usleep(int ms, int time2die, long long last_meal)
 	}
 	if (now - age >= time2die)
 		return (1);
+	return (0);
+}
+
+int	start_eating(t_philo *philo, int *meals,
+		char *picked_forks, int coordinates[2])
+{
+	if (eating(philo, coordinates))
+		return (death(philo), 1);
+	if (philo->args[4] != -1)
+		(*meals)++;
+	*picked_forks = 0;
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:25:01 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/06/17 12:10:09 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/06/27 13:20:12 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,13 @@ typedef struct s_philo
 	pthread_mutex_t			*lock;
 }	t_philo;
 
+int					start_eating(t_philo *philo, int *meals,
+						char *picked_forks, int coordinates[2]);
+void				*death(t_philo *philo);
+int					wait_fork(t_philo *philo, int coordinates[2], int picked);
+int					eating(t_philo *philo, int coordinates[2]);
+char				pick_forks(t_philo *philo,
+						int coordinates[2], int	*picked);
 int					ft_atoi(const char *ptr);
 long long			*get_args(int argc, char **argv);
 void				error(void);
