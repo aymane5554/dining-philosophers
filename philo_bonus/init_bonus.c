@@ -1,24 +1,56 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   init_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/16 00:29:46 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/06/27 17:22:15 by ayel-arr         ###   ########.fr       */
+/*   Created: 2025/02/26 08:24:32 by ayel-arr          #+#    #+#             */
+/*   Updated: 2025/06/28 14:51:14 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
-void	starving(pthread_t *threads, const long long *args, char *forks)
+int	*get_args(int argc, char **argv)
 {
-	usleep(args[1] * 1000);
-	printf("%lli %i died\n", args[1], 1);
-	free(threads);
-	free((long long *)args);
-	free(forks);
+	int	*args;
+	int	i;
+	int	j;
+
+	if (argc < 5 || argc > 6)
+		return (NULL);
+	args = malloc(5 * sizeof(int));
+	if (args == NULL)
+		return (NULL);
+	i = 1;
+	j = 0;
+	while (i < argc)
+	{
+		args[j] = ft_atoi(argv[i]);
+		if (args[j] == -1)
+			return (free(args), NULL);
+		i++;
+		j++;
+	}
+	if (argc == 5)
+		args[4] = -1;
+	return (args);
+}
+
+void	error(void)
+{
+	write(2, "error\n", 6);
+}
+
+long long	timenow(void)
+{
+	struct timeval		tv;
+	long long			time;
+
+	gettimeofday(&tv, NULL);
+	time = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+	return (time);
 }
 
 int	ft_usleep(int ms, int time2die, long long last_meal)
@@ -42,16 +74,5 @@ int	ft_usleep(int ms, int time2die, long long last_meal)
 	}
 	if (now - age >= time2die)
 		return (1);
-	return (0);
-}
-
-int	start_eating(t_philo *philo, int *meals,
-		char *picked_forks, int coordinates[2])
-{
-	if (eating(philo, coordinates))
-		return (death(philo), 1);
-	if (philo->args[4] != -1)
-		(*meals)++;
-	*picked_forks = 0;
 	return (0);
 }

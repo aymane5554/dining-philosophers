@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:32 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/06/27 12:05:41 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/06/27 17:09:39 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ long long	*make_threads(pthread_t	*threads, const long long *args,
 		tmp->number = i;
 		tmp->lock = locks;
 		tmp->info = info;
-		pthread_create(threads + i, NULL, philosopher, tmp);
+		pthread_create(threads + i, NULL, philosopher, tmp); //check failure
 		pthread_detach(threads[i]);
 		i += 2;
 	}
