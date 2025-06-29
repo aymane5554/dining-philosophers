@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 16:37:30 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/06/28 15:46:42 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/06/29 11:27:51 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,11 @@ void	*timer(void	*arg)
 		sem_post(tt->sem_ate);
 		usleep(1000);
 	}
-	printf("%d died\n", tt->number);
-	exit(0);
+	printf("%lld %d died\n", timenow() - start_time(), tt->number);
+	sem_close(tt->sem_ate);
+	sem_close(tt->sem);
+	free(tt->args);
+	exit(1);
 	return (NULL);
 }
 
@@ -37,7 +40,13 @@ int	timer_create_(t_arg *arg)
 {
 	pthread_t	thread;
 
-	pthread_create(&thread, NULL, timer, arg);
+	if (pthread_create(&thread, NULL, timer, arg) == -1)
+	{
+		sem_close(arg->sem);
+		sem_close(arg->sem_ate);
+		free(arg->args);
+		exit(1);
+	}
 	pthread_detach(thread);
 	return (0);
 }
@@ -52,28 +61,45 @@ int	philosopher(t_arg *arg)
 	arg->age = timenow();
 	while (meals != arg->args[4])
 	{
-		printf("%d is thinking\n", arg->number);
+		printf("%lld %d is thinking\n", timenow() - start_time(), arg->number);
 		sem_wait(arg->sem_ate);
 		arg->ate[0] = 0;
-		sem_post(arg->sem_ate);
-		timer_create_(arg);
-		sem_wait(arg->sem);
-		sem_wait(arg->sem);
-		sem_wait(arg->sem_ate);
+		(sem_post(arg->sem_ate), timer_create_(arg));
+		(sem_wait(arg->sem), sem_wait(arg->sem), sem_wait(arg->sem_ate));
 		arg->ate[0] = 1;
 		sem_post(arg->sem_ate);
-		printf("%d is eating\n", arg->number);
+		printf("%lld %d is eating\n", timenow() - start_time(), arg->number);
 		arg->age = timenow();
 		ft_usleep(arg->args[2], arg->args[1], arg->age);
-		sem_post(arg->sem);
-		sem_post(arg->sem);
-		printf("%d is sleeping\n", arg->number);
+		(sem_post(arg->sem), sem_post(arg->sem));
+		printf("%lld %d is sleeping\n", timenow() - start_time(), arg->number);
 		ft_usleep(arg->args[3], arg->args[1], arg->age);
 		meals++;
 	}
-	printf("%d exit\n", arg->number);
-	exit(0);
-	return (0);
+	(sem_close(arg->sem_ate), sem_close(arg->sem), free(arg->args));
+	return (exit(0), 0);
+}
+
+void	wait_philos(int *args, pid_t *pids, sem_t *sem)
+{
+	int	status;
+	int	i;
+
+	i = 0;
+	while (waitpid(-1, &status, 0) != -1)
+	{
+		if (WEXITSTATUS(status) == 1)
+		{
+			while (i < args[0])
+			{
+				kill(pids[i], SIGKILL);
+				i++;
+			}
+			sem_close(sem);
+			free(args);
+			exit(0);
+		}
+	}
 }
 
 int	main(int argc, char **argv)
@@ -82,6 +108,7 @@ int	main(int argc, char **argv)
 	sem_t		*sem;
 	int			i;
 	t_arg		arg;
+	pid_t		*pids;
 
 	i = 0;
 	args = get_args(argc, argv);
@@ -91,15 +118,13 @@ int	main(int argc, char **argv)
 	sem_unlink("sem_philo");
 	arg.args = args;
 	arg.sem = sem;
+	pids = malloc(args[0] * sizeof(pid_t));
+	start_time();
 	while (i < args[0])
 	{
-		if (fork() == 0)
-		{
-			arg.number = i + 1;
-			philosopher(&arg);
-		}
+		pids[i] = fork();
+		check_fork(i, pids, sem, &arg);
 		i++;
 	}
-	while (1)
-		continue ;
+	wait_philos(args, pids, sem);
 }

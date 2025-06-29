@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/06/27 13:20:22 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/06/29 11:36:53 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,8 +115,11 @@ int	main(int argc, char **argv)
 		return (starving(threads, args, forks), 0);
 	locks = creating_locks(args[0]);
 	info = make_threads(threads, args, forks, locks);
+	if (!info)
+		return (error(), 1);
 	usleep(50);
-	make_threads(threads, args, forks, locks);
+	if (!make_threads(threads, args, forks, locks))
+		return (error(), 1);
 	check_death(args, locks, info);
 	return (0);
 }

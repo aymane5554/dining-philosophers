@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:32 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/06/28 14:51:14 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/06/29 10:57:43 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,19 @@ int	*get_args(int argc, char **argv)
 void	error(void)
 {
 	write(2, "error\n", 6);
+}
+
+long long	start_time(void)
+{
+	static long long	start;
+	struct timeval		tv;
+
+	if (start == 0)
+	{
+		gettimeofday(&tv, NULL);
+		start = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+	}
+	return (start);
 }
 
 long long	timenow(void)

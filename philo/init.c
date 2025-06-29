@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:32 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/06/27 17:09:39 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/06/29 11:34:06 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,7 @@ long long	*make_threads(pthread_t	*threads, const long long *args,
 	if (!info)
 	{
 		info = malloc(4 * sizeof(long long));
-		memset(info, 0, 4 * sizeof(long long));
-		info[3] = timenow();
+		(memset(info, 0, 4 * sizeof(long long)), info[3] = timenow());
 	}
 	while (i < args[0])
 	{
@@ -83,7 +82,8 @@ long long	*make_threads(pthread_t	*threads, const long long *args,
 		tmp->number = i;
 		tmp->lock = locks;
 		tmp->info = info;
-		pthread_create(threads + i, NULL, philosopher, tmp); //check failure
+		if (pthread_create(threads + i, NULL, philosopher, tmp) == -1)
+			return (free(tmp), NULL);
 		pthread_detach(threads[i]);
 		i += 2;
 	}
