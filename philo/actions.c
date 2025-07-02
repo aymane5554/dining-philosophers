@@ -6,13 +6,13 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 12:20:32 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/06/27 12:57:11 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/02 17:59:29 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	eating(t_philo *philo, int coordinates[2])
+int	eating(t_philo *philo, int coordinates[2], int *meals)
 {
 	pthread_mutex_lock(philo->lock);
 	printf("%lld %d is eating\n", timenow() - philo->info[3], philo->number + 1);
@@ -26,6 +26,11 @@ int	eating(t_philo *philo, int coordinates[2])
 	pthread_mutex_lock(philo->lock + 2 + coordinates[1]);
 	philo->forks[coordinates[1]] = 'a';
 	pthread_mutex_unlock(philo->lock + 2 + coordinates[1]);
+	if (philo->args[4] != -1)
+		(*meals)++;
+	if (*meals == philo->args[4])
+		(pthread_mutex_lock(philo->lock), philo->info[1]++,
+			pthread_mutex_unlock(philo->lock));
 	pthread_mutex_lock(philo->lock);
 	printf("%lld %d is sleeping\n",
 		timenow() - philo->info[3], philo->number + 1);

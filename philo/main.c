@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/06/29 11:36:53 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/02 17:54:56 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,15 +44,6 @@ static t_philo	*philo_init(void *arg, int *meals,
 	return (philo);
 }
 
-static void	*finish(t_philo	*philo)
-{
-	pthread_mutex_lock(philo->lock);
-	philo->info[1]++;
-	pthread_mutex_unlock(philo->lock);
-	free(philo);
-	return (NULL);
-}
-
 void	*philosopher(void	*arg)
 {
 	t_philo	*philo;
@@ -79,7 +70,7 @@ void	*philosopher(void	*arg)
 			picked_forks = 2;
 		}
 	}
-	return (finish(philo));
+	return (free(philo), NULL);
 }
 
 static void	check_death(const long long *args,
@@ -108,11 +99,11 @@ int	main(int argc, char **argv)
 	args = get_args(argc, argv);
 	if (args == NULL)
 		return (error(), 0);
+	if (args[0] == 1)
+		return (starving(args), 0);
 	forks = malloc(args[0] * sizeof(char));
 	threads = malloc(args[0] * sizeof(pthread_t));
 	memset(forks, 'a', (args[0] * sizeof(char)));
-	if (args[0] == 1)
-		return (starving(threads, args, forks), 0);
 	locks = creating_locks(args[0]);
 	info = make_threads(threads, args, forks, locks);
 	if (!info)

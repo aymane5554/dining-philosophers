@@ -6,19 +6,18 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 00:29:46 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/06/27 17:22:15 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/02 17:55:52 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	starving(pthread_t *threads, const long long *args, char *forks)
+void	starving(const long long *args)
 {
+	printf("0 1 has taken a fork\n");
 	usleep(args[1] * 1000);
 	printf("%lli %i died\n", args[1], 1);
-	free(threads);
 	free((long long *)args);
-	free(forks);
 }
 
 int	ft_usleep(int ms, int time2die, long long last_meal)
@@ -48,10 +47,8 @@ int	ft_usleep(int ms, int time2die, long long last_meal)
 int	start_eating(t_philo *philo, int *meals,
 		char *picked_forks, int coordinates[2])
 {
-	if (eating(philo, coordinates))
+	if (eating(philo, coordinates, meals))
 		return (death(philo), 1);
-	if (philo->args[4] != -1)
-		(*meals)++;
 	*picked_forks = 0;
 	return (0);
 }
