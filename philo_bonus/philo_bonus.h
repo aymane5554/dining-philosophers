@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 16:37:56 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/06/30 10:56:39 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/02 14:22:34 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,4 +46,5 @@ int			philosopher(t_arg *arg);
 char		*ft_strjoin(char const *s1, char const *s2);
 char		*ft_itoa(int n);
 char		*get_sem_name(int number);
+void		pick_forks(t_arg *arg);
 #endif

@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 11:17:02 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/06/30 10:31:30 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/02 14:22:08 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,14 @@ char	*get_sem_name(int number)
 	name = ft_strjoin("_sem_ate_", num);
 	free(num);
 	return (name);
+}
+
+void	pick_forks(t_arg *arg)
+{
+	sem_wait(arg->sem);
+	printf("%lld %d has tkaen a fork\n",
+		timenow() - start_time(), arg->number);
+	sem_wait(arg->sem);
+	printf("%lld %d has tkaen a fork\n",
+		timenow() - start_time(), arg->number);
 }

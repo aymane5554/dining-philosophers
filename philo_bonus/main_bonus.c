@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 16:37:30 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/06/30 11:26:18 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/02 14:23:13 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	philosopher(t_arg *arg)
 		printf("%lld %d is thinking\n", timenow() - start_time(), arg->number);
 		(sem_wait(arg->sem_ate), arg->ate[0] = 0);
 		(sem_post(arg->sem_ate), timer_create_(arg));
-		(sem_wait(arg->sem), sem_wait(arg->sem), sem_wait(arg->sem_ate));
+		(pick_forks(arg), sem_wait(arg->sem_ate));
 		arg->ate[0] = 1;
 		sem_post(arg->sem_ate);
 		printf("%lld %d is eating\n", timenow() - start_time(), arg->number);
