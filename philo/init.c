@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:32 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/06/29 11:34:06 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/02 19:31:53 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ pthread_mutex_t	*creating_locks(int no_philos)
 
 	i = 0;
 	locks = malloc((no_philos + 2) * sizeof(pthread_mutex_t));
+	if (!locks)
+		return (NULL);
 	pthread_mutex_init(locks, NULL);
 	pthread_mutex_init(locks + 1, NULL);
 	while (i < no_philos)
@@ -72,11 +74,15 @@ long long	*make_threads(pthread_t	*threads, const long long *args,
 	if (!info)
 	{
 		info = malloc(4 * sizeof(long long));
+		if (!info)
+			return (NULL);
 		(memset(info, 0, 4 * sizeof(long long)), info[3] = timenow());
 	}
 	while (i < args[0])
 	{
 		tmp = malloc(sizeof(t_philo));
+		if (!tmp)
+			return (free(info), NULL);
 		tmp->args = args;
 		tmp->forks = forks;
 		tmp->number = i;

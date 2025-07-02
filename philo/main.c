@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/02 17:54:56 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/02 19:32:46 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,15 +102,23 @@ int	main(int argc, char **argv)
 	if (args[0] == 1)
 		return (starving(args), 0);
 	forks = malloc(args[0] * sizeof(char));
+	if (!forks)
+		return (error(), free(args), 1);
 	threads = malloc(args[0] * sizeof(pthread_t));
+	if (!threads)
+		return (error(), free(args), free(forks), 1);
 	memset(forks, 'a', (args[0] * sizeof(char)));
 	locks = creating_locks(args[0]);
+	if (!locks)
+		return (error(), free(args), free(forks), free(threads), 1);
 	info = make_threads(threads, args, forks, locks);
 	if (!info)
-		return (error(), 1);
+		return (error(), free(args), free(forks),
+			free(threads), free(locks), free(info), 1);
 	usleep(50);
 	if (!make_threads(threads, args, forks, locks))
-		return (error(), 1);
+		return (error(), free(args), free(forks),
+			free(threads), free(locks), free(info), 1);
 	check_death(args, locks, info);
 	return (0);
 }

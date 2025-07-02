@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 16:37:30 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/02 14:23:13 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/02 19:24:17 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,9 +70,11 @@ int	philosopher(t_arg *arg)
 		(sem_wait(arg->sem_ate), arg->age = timenow(), sem_post(arg->sem_ate));
 		ft_usleep(arg->args[2], arg->args[1], arg->age, arg);
 		(sem_post(arg->sem), sem_post(arg->sem));
-		printf("%lld %d is sleeping\n", timenow() - start_time(), arg->number);
-		ft_usleep(arg->args[3], arg->args[1], arg->age, arg);
 		meals++;
+		printf("%lld %d is sleeping\n", timenow() - start_time(), arg->number);
+		if (meals == arg->args[4])
+			(sem_close(arg->sem_ate), sem_close(arg->sem), exit(0));
+		ft_usleep(arg->args[3], arg->args[1], arg->age, arg);
 	}
 	(sem_close(arg->sem_ate), sem_close(arg->sem));
 	return (exit(0), 0);
@@ -116,6 +118,8 @@ int	main(int argc, char **argv)
 	sem_unlink("_sem_philo_");
 	arg.sem = sem;
 	pids = malloc(arg.args[0] * sizeof(pid_t));
+	if (!pids)
+		return (error(), 1);
 	start_time();
 	while (i < arg.args[0])
 	{
