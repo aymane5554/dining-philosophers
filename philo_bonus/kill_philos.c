@@ -53,9 +53,9 @@ char	*get_sem_name(int number)
 void	pick_forks(t_arg *arg)
 {
 	sem_wait(arg->sem);
-	printf("%lld %d has tkaen a fork\n",
+	printf("%lld %d has taken a fork\n",
 		timenow() - start_time(), arg->number);
 	sem_wait(arg->sem);
-	printf("%lld %d has tkaen a fork\n",
+	printf("%lld %d has taken a fork\n",
 		timenow() - start_time(), arg->number);
 }
