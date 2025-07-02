@@ -1,6 +1,6 @@
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
-SRCS = init_bonus.c main_bonus.c ft_atoi_bonus.c kill_philos.c
+CFLAGS = -Wall -Wextra -Werror -fsanitize=thread
+SRCS = init_bonus.c main_bonus.c ft_atoi_bonus.c kill_philos.c ft_itoa_bonus.c join.c
 OBJS = $(SRCS:%.c=%.o)
 NAME = philo_bonus
 

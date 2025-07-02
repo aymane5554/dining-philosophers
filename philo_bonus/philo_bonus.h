@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 16:37:56 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/06/29 11:28:28 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/06/30 10:56:39 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,21 +26,24 @@
 
 typedef struct s_arg
 {
-	int			*args;
+	int			args[5];
 	sem_t		*sem_ate;
-	char		*ate;
+	char		ate[1];
 	sem_t		*sem;
 	long long	age;
 	int			number;
 }	t_arg;
 
-int			*get_args(int argc, char **argv);
+int			get_args(int argc, char **argv, int *args);
 int			ft_atoi(const char *ptr);
 long long	timenow(void);
 long long	start_time(void);
 void		error(void);
-int			ft_usleep(int ms, int time2die, long long last_meal);
-void		kill_philos(pid_t *pids, sem_t *sem, int *args);
+int			ft_usleep(int ms, int time2die, long long last_meal, t_arg *arg);
+void		kill_philos(pid_t *pids, sem_t *sem);
 void		check_fork(int i, pid_t *pids, sem_t *sem, t_arg *arg);
 int			philosopher(t_arg *arg);
+char		*ft_strjoin(char const *s1, char const *s2);
+char		*ft_itoa(int n);
+char		*get_sem_name(int number);
 #endif
