@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:32 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/02 19:31:53 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/04 11:21:51 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ long long	*make_threads(pthread_t	*threads, const long long *args,
 		tmp->number = i;
 		tmp->lock = locks;
 		tmp->info = info;
-		if (pthread_create(threads + i, NULL, philosopher, tmp) == -1)
+		if (pthread_create(threads + i, NULL, philosopher, tmp) != 0)
 			return (free(tmp), NULL);
 		pthread_detach(threads[i]);
 		i += 2;

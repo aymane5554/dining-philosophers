@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 16:37:30 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/02 19:24:17 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/04 11:22:14 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	timer_create_(t_arg *arg)
 {
 	pthread_t	thread;
 
-	if (pthread_create(&thread, NULL, timer, arg) == -1)
+	if (pthread_create(&thread, NULL, timer, arg) != 0)
 	{
 		sem_close(arg->sem);
 		sem_close(arg->sem_ate);
@@ -70,7 +70,8 @@ int	philosopher(t_arg *arg)
 		(sem_wait(arg->sem_ate), arg->age = timenow(), sem_post(arg->sem_ate));
 		ft_usleep(arg->args[2], arg->args[1], arg->age, arg);
 		(sem_post(arg->sem), sem_post(arg->sem));
-		meals++;
+		if (arg->args[4] != -1)
+			meals++;
 		printf("%lld %d is sleeping\n", timenow() - start_time(), arg->number);
 		if (meals == arg->args[4])
 			(sem_close(arg->sem_ate), sem_close(arg->sem), exit(0));
