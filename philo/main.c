@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/03 11:12:26 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/06 10:08:43 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,10 +97,7 @@ int	main(int argc, char **argv)
 	pthread_mutex_t			*locks;
 
 	args = get_args(argc, argv);
-	if (args == NULL)
-		return (error(), 0);
-	if (args[0] == 1)
-		return (starving(args), 0);
+	starving(args);
 	forks = malloc(args[0] * sizeof(char));
 	if (!forks)
 		return (error(), free((long long *)args), 1);
@@ -110,16 +107,12 @@ int	main(int argc, char **argv)
 	memset(forks, 'a', (args[0] * sizeof(char)));
 	locks = creating_locks(args[0]);
 	if (!locks)
-		return (error(), free((long long *)args),
-			free(forks), free(threads), 1);
+		return (multiple_free((void *)args, forks, threads, locks), 1);
 	info = make_threads(threads, args, forks, locks);
 	if (!info)
-		return (error(), free((long long *)args), free(forks),
-			free(threads), free(locks), free(info), 1);
+		return (multiple_free((void *)args, forks, threads, locks), 1);
 	usleep(50);
 	if (!make_threads(threads, args, forks, locks))
-		return (error(), free((long long *)args), free(forks),
-			free(threads), free(locks), free(info), 1);
-	check_death(args, locks, info);
-	return (0);
+		return (multiple_free((void *)args, forks, threads, locks), 1);
+	return (check_death(args, locks, info), 0);
 }

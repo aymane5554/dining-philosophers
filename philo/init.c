@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:32 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/04 11:21:51 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/06 10:07:34 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@ long long	*get_args(int argc, char **argv)
 	int			j;
 
 	if (argc < 5 || argc > 6)
-		return (NULL);
+		return (error(), exit(1), NULL);
 	args = malloc(5 * sizeof(long long));
 	if (args == NULL)
-		return (NULL);
+		return (error(), exit(1), NULL);
 	i = 1;
 	j = 0;
 	while (i < argc)
@@ -80,16 +80,12 @@ long long	*make_threads(pthread_t	*threads, const long long *args,
 	}
 	while (i < args[0])
 	{
-		tmp = malloc(sizeof(t_philo));
+		tmp = create_philo_struct(forks, args, locks, info);
 		if (!tmp)
 			return (free(info), NULL);
-		tmp->args = args;
-		tmp->forks = forks;
 		tmp->number = i;
-		tmp->lock = locks;
-		tmp->info = info;
 		if (pthread_create(threads + i, NULL, philosopher, tmp) != 0)
-			return (free(tmp), NULL);
+			return (free(tmp), free(info), NULL);
 		pthread_detach(threads[i]);
 		i += 2;
 	}

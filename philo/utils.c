@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 00:29:46 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/02 17:55:52 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/06 10:06:13 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,14 @@
 
 void	starving(const long long *args)
 {
-	printf("0 1 has taken a fork\n");
-	usleep(args[1] * 1000);
-	printf("%lli %i died\n", args[1], 1);
-	free((long long *)args);
+	if (args[0] == 1)
+	{
+		printf("0 1 has taken a fork\n");
+		usleep(args[1] * 1000);
+		printf("%lli %i died\n", args[1], 1);
+		free((long long *)args);
+		exit(0);
+	}
 }
 
 int	ft_usleep(int ms, int time2die, long long last_meal)
@@ -51,4 +55,27 @@ int	start_eating(t_philo *philo, int *meals,
 		return (death(philo), 1);
 	*picked_forks = 0;
 	return (0);
+}
+
+t_philo	*create_philo_struct(char *forks, const long long *args,
+		pthread_mutex_t *locks, long long *info)
+{
+	t_philo	*tmp;
+
+	tmp = malloc(sizeof(t_philo));
+	if (!tmp)
+		return (NULL);
+	tmp->args = args;
+	tmp->forks = forks;
+	tmp->lock = locks;
+	tmp->info = info;
+	return (tmp);
+}
+
+void	multiple_free(void *first, void *second, void *third, void *forth)
+{
+	free(first);
+	free(second);
+	free(third);
+	free(forth);
 }

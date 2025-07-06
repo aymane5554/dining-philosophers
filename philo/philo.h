@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:25:01 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/04 11:21:27 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/06 10:00:48 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,4 +47,8 @@ void				starving(const long long *args);
 pthread_mutex_t		*creating_locks(int no_philos);
 long long			timenow(void);
 int					ft_usleep(int ms, int time2die, long long last_meal);
+t_philo				*create_philo_struct(char *forks, const long long *args,
+						pthread_mutex_t *locks, long long *info);
+void				multiple_free(void *first, void *second,
+						void *third, void *forth);
 #endif
