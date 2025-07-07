@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:32 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/07 15:01:57 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/07 15:45:51 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,17 @@ long long	*get_args(int argc, char **argv)
 	int			j;
 
 	if (argc < 5 || argc > 6)
-		return (error(), exit(1), NULL);
+		return (error(), NULL);
 	args = malloc(5 * sizeof(long long));
 	if (args == NULL)
-		return (error(), exit(1), NULL);
+		return (error(), NULL);
 	i = 1;
 	j = 0;
 	while (i < argc)
 	{
 		args[j] = (long long)ft_atoi(argv[i]);
 		if (args[j] == -1)
-			return (free(args), exit(1), NULL);
+			return (free(args), NULL);
 		i++;
 		j++;
 	}

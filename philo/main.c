@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/06 10:08:43 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/07 15:47:01 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,8 @@ int	main(int argc, char **argv)
 	pthread_mutex_t			*locks;
 
 	args = get_args(argc, argv);
+	if (!args)
+		return (free(args), NULL);
 	starving(args);
 	forks = malloc(args[0] * sizeof(char));
 	if (!forks)
