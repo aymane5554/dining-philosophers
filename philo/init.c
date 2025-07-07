@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:32 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/06 10:07:34 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/07 15:01:57 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ long long	*get_args(int argc, char **argv)
 	{
 		args[j] = (long long)ft_atoi(argv[i]);
 		if (args[j] == -1)
-			return (free(args), NULL);
+			return (free(args), exit(1), NULL);
 		i++;
 		j++;
 	}
