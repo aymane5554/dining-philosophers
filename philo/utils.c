@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 00:29:46 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/06 10:06:13 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/07 16:15:11 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,10 @@
 
 void	starving(const long long *args)
 {
-	if (args[0] == 1)
-	{
-		printf("0 1 has taken a fork\n");
-		usleep(args[1] * 1000);
-		printf("%lli %i died\n", args[1], 1);
-		free((long long *)args);
-		exit(0);
-	}
+	printf("0 1 has taken a fork\n");
+	usleep(args[1] * 1000);
+	printf("%lli %i died\n", args[1], 1);
+	free((long long *)args);
 }
 
 int	ft_usleep(int ms, int time2die, long long last_meal)

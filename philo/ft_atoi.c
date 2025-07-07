@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:31:04 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/03/17 04:28:08 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/07 16:24:19 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,4 +41,14 @@ int	ft_atoi(const char *ptr)
 	if ((*ptr != ' ' && *ptr != '\0') || total == 0)
 		return (-1);
 	return (total);
+}
+
+long long	*get_args_(int argc, char **argv, long long **args)
+{
+	*args = get_args(argc, argv);
+	if (!*args)
+		return (error(), NULL);
+	if (args[0][0] == 1)
+		return (starving(*args), NULL);
+	return (*args);
 }

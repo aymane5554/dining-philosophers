@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:25:01 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/06 10:00:48 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/07 16:23:02 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ char				pick_forks(t_philo *philo,
 						int coordinates[2], int	*picked);
 int					ft_atoi(const char *ptr);
 long long			*get_args(int argc, char **argv);
+long long			*get_args_(int argc, char **argv, long long **args);
 void				error(void);
 long long			*make_threads(pthread_t	*threads, const long long *args,
 						char *forks, pthread_mutex_t	*locks);
