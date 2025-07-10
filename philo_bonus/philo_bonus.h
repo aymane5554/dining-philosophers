@@ -6,14 +6,13 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 16:37:56 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/02 14:22:34 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/10 11:21:31 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_BONUS_H
 # define PHILO_BONUS_H
 
-# include <string.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <sys/time.h>
