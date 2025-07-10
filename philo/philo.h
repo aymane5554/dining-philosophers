@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:25:01 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/10 11:22:59 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/10 22:12:34 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,10 @@ typedef struct s_philo
 {
 	char					*forks;
 	const long long			*args;
-	int						number;
 	long long				age;
 	long long				*info;
 	pthread_mutex_t			*lock;
+	int						number;
 }	t_philo;
 
 int					start_eating(t_philo *philo, int *meals,

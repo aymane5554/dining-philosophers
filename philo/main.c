@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/07 16:23:13 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/10 21:55:52 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,11 @@ void	*philosopher(void	*arg)
 }
 
 static void	check_death(const long long *args,
-			pthread_mutex_t *lock, long long *info)
+			pthread_mutex_t *lock, long long *info, pthread_t *threads)
 {
+	int	i;
+
+	i = 0;
 	while (1)
 	{
 		pthread_mutex_lock(lock);
@@ -86,6 +89,7 @@ static void	check_death(const long long *args,
 	}
 	if (info[0])
 		printf("%lld %lld died\n", info[2], info[0]);
+	free(threads);
 }
 
 int	main(int argc, char **argv)
@@ -114,5 +118,5 @@ int	main(int argc, char **argv)
 	usleep(50);
 	if (!make_threads(threads, args, forks, locks))
 		return (multiple_free((void *)args, forks, threads, locks), 1);
-	return (check_death(args, locks, info), 0);
+	return (check_death(args, locks, info, threads), 0);
 }
