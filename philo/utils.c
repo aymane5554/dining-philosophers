@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 00:29:46 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/07 16:15:11 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/11 11:15:34 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	starving(const long long *args)
 	free((long long *)args);
 }
 
-int	ft_usleep(int ms, int time2die, long long last_meal)
+int	ft_usleep(int ms, t_philo *philo)
 {
 	struct timeval	tv;
 	long long		start;
@@ -28,18 +28,20 @@ int	ft_usleep(int ms, int time2die, long long last_meal)
 	long long		age;
 
 	gettimeofday(&tv, NULL);
-	age = last_meal;
+	age = philo->age;
 	now = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
 	start = now;
 	while (now - start < ms)
 	{
-		if (now - age >= time2die)
+		if (now - age >= philo->args[1])
 			return (1);
+		if (end(0, philo->lock + 1))
+			return (2);
 		usleep(100);
 		gettimeofday(&tv, NULL);
 		now = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
 	}
-	if (now - age >= time2die)
+	if (now - age >= philo->args[1])
 		return (1);
 	return (0);
 }
@@ -47,8 +49,13 @@ int	ft_usleep(int ms, int time2die, long long last_meal)
 int	start_eating(t_philo *philo, int *meals,
 		char *picked_forks, int coordinates[2])
 {
-	if (eating(philo, coordinates, meals))
+	int	ret;
+
+	ret = eating(philo, coordinates, meals);
+	if (ret == 1)
 		return (death(philo), 1);
+	else if (ret == 2)
+		return (free(philo), 2);
 	*picked_forks = 0;
 	return (0);
 }

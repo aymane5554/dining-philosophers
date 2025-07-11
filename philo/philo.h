@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:25:01 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/10 22:12:34 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/11 11:11:51 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,12 @@
 
 typedef struct s_philo
 {
-	char					*forks;
-	const long long			*args;
-	long long				age;
-	long long				*info;
-	pthread_mutex_t			*lock;
-	int						number;
+	char			*forks;
+	const long long	*args;
+	long long		age;
+	long long		*info;
+	pthread_mutex_t	*lock;
+	int				number;
 }	t_philo;
 
 int					start_eating(t_philo *philo, int *meals,
@@ -47,9 +47,12 @@ void				*philosopher(void	*arg);
 void				starving(const long long *args);
 pthread_mutex_t		*creating_locks(int no_philos);
 long long			timenow(void);
-int					ft_usleep(int ms, int time2die, long long last_meal);
+int					ft_usleep(int ms, t_philo *philo);
 t_philo				*create_philo_struct(char *forks, const long long *args,
 						pthread_mutex_t *locks, long long *info);
 void				multiple_free(void *first, void *second,
 						void *third, void *forth);
+char				end(char opt, pthread_mutex_t *lock);
+int					check_wait(t_philo *philo, int coordinates[2], int picked);
+int					check(int ms, t_philo *philo, int *ret);
 #endif

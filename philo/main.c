@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/10 21:55:52 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/11 12:00:11 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 //			(is a timeval pointer casted to long long)
 //	info[3] = time of start 
 //	locks[0]= mutex lock for info
-//	locks[1]= mutex lock for tv
+//	locks[1]= mutex lock for end
 //	locks[n]= mutex lock for forks
 
 static t_philo	*philo_init(void *arg, int *meals,
@@ -53,7 +53,7 @@ void	*philosopher(void	*arg)
 	int		picked;
 
 	philo = philo_init(arg, &meals, &picked_forks, coordinates);
-	while (meals != philo->args[4])
+	while (meals != philo->args[4] && !end(0, philo->lock + 1))
 	{
 		if (picked_forks == 0)
 			picked_forks = pick_forks(philo, coordinates, &picked);
@@ -65,16 +65,16 @@ void	*philosopher(void	*arg)
 		}
 		else
 		{
-			if (wait_fork(philo, coordinates, picked))
-				return (death(philo));
+			if (check_wait(philo, coordinates, picked))
+				return (NULL);
 			picked_forks = 2;
 		}
 	}
 	return (free(philo), NULL);
 }
 
-static void	check_death(const long long *args,
-			pthread_mutex_t *lock, long long *info, pthread_t *threads)
+static void	check_death(const long long *args, pthread_t *threads,
+			pthread_mutex_t *lock, long long *info)
 {
 	int	i;
 
@@ -83,13 +83,24 @@ static void	check_death(const long long *args,
 	{
 		pthread_mutex_lock(lock);
 		if (info[0] || info[1] == args[0])
+		{
+			pthread_mutex_unlock(lock);
+			end(1, lock + 1);
 			break ;
+		}
 		pthread_mutex_unlock(lock);
 		usleep(1000);
 	}
+	pthread_mutex_lock(lock);
 	if (info[0])
 		printf("%lld %lld died\n", info[2], info[0]);
-	free(threads);
+	pthread_mutex_unlock(lock);
+	while (i < args[0])
+	{
+		pthread_join(threads[i], NULL);
+		i++;
+	}
+	free((void *)args);
 }
 
 int	main(int argc, char **argv)
@@ -115,8 +126,9 @@ int	main(int argc, char **argv)
 	info = make_threads(threads, args, forks, locks);
 	if (!info)
 		return (multiple_free((void *)args, forks, threads, locks), 1);
-	usleep(50);
+	usleep(100);
 	if (!make_threads(threads, args, forks, locks))
 		return (multiple_free((void *)args, forks, threads, locks), 1);
-	return (check_death(args, locks, info, threads), 0);
+	check_death(args, threads, locks, info);
+	return (multiple_free(threads, forks, info, locks), 0);
 }

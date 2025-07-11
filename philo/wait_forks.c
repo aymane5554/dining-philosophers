@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 12:06:59 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/06/27 12:40:19 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/11 12:02:22 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,9 @@ static void	pick_first_fork(t_philo *philo, int coordinates[2], int *count)
 	if (p)
 	{
 		pthread_mutex_lock(philo->lock);
-		printf("%lld %d has taken a fork\n",
-			timenow() - philo->info[3], philo->number + 1);
+		if (!end(0, philo->lock + 1))
+			printf("%lld %d has taken a fork\n",
+				timenow() - philo->info[3], philo->number + 1);
 		pthread_mutex_unlock(philo->lock);
 		p = 0;
 	}
@@ -51,8 +52,9 @@ static void	pick_second_fork(t_philo *philo, int coordinates[2], int *count)
 	if (p)
 	{
 		pthread_mutex_lock(philo->lock);
-		printf("%lld %d has taken a fork\n",
-			timenow() - philo->info[3], philo->number + 1);
+		if (!end(0, philo->lock + 1))
+			printf("%lld %d has taken a fork\n",
+				timenow() - philo->info[3], philo->number + 1);
 		pthread_mutex_unlock(philo->lock);
 		p = 0;
 	}
@@ -63,7 +65,7 @@ static int	wait_forks(t_philo *philo, int coordinates[2])
 	int		count;
 
 	count = 0;
-	while (timenow() - philo->age < philo->args[1])
+	while (timenow() - philo->age < philo->args[1] && !end(0, philo->lock + 1))
 	{
 		pick_first_fork(philo, coordinates, &count);
 		pick_second_fork(philo, coordinates, &count);
@@ -71,6 +73,8 @@ static int	wait_forks(t_philo *philo, int coordinates[2])
 			return (0);
 		usleep(100);
 	}
+	if (end(0, philo->lock + 1))
+		return (2);
 	return (1);
 }
 
@@ -83,8 +87,9 @@ static int	wait_fork_(t_philo *philo,
 		philo->forks[fork_needed] = 'u';
 		pthread_mutex_unlock(philo->lock + 2 + fork_needed);
 		pthread_mutex_lock(philo->lock);
-		printf("%lld %d has taken a fork\n",
-			timenow() - philo->info[3], philo->number + 1);
+		if (!end(0, philo->lock + 1))
+			printf("%lld %d has taken a fork\n",
+				timenow() - philo->info[3], philo->number + 1);
 		pthread_mutex_unlock(philo->lock);
 		return (1);
 	}
@@ -97,24 +102,23 @@ int	wait_fork(t_philo *philo, int coordinates[2], int picked)
 	int	fork_needed;
 
 	pthread_mutex_lock(philo->lock);
-	printf("%lld %d is thinking\n",
-		timenow() - philo->info[3], philo->number + 1);
+	if (!end(0, philo->lock + 1))
+		printf("%lld %d is thinking\n",
+			timenow() - philo->info[3], philo->number + 1);
 	pthread_mutex_unlock(philo->lock);
 	if (picked == -1)
-	{
-		if (wait_forks(philo, coordinates))
-			return (1);
-		return (0);
-	}
+		return (wait_forks(philo, coordinates));
 	if (picked == coordinates[0])
 		fork_needed = coordinates[1];
 	if (picked == coordinates[1])
 		fork_needed = coordinates[0];
-	while (timenow() - philo->age < philo->args[1])
+	while (timenow() - philo->age < philo->args[1] && !end(0, philo->lock + 1))
 	{
 		if (wait_fork_(philo, fork_needed))
 			return (0);
 		usleep(100);
 	}
+	if (end(0, philo->lock + 1))
+		return (2);
 	return (1);
 }

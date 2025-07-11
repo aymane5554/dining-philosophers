@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:32 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/06/30 11:21:22 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/11 10:33:52 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,8 @@ long long	timenow(void)
 	return (time);
 }
 
-int	ft_usleep(int ms, int time2die, long long last_meal, t_arg *arg)
+int	ft_usleep(int ms, int time2die, long long last_meal,
+		t_arg *arg, pthread_mutex_t *lock)
 {
 	struct timeval	tv;
 	long long		start;
