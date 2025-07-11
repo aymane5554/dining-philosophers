@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/11 12:00:11 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/11 14:53:23 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,9 +124,8 @@ int	main(int argc, char **argv)
 	if (!locks)
 		return (multiple_free((void *)args, forks, threads, locks), 1);
 	info = make_threads(threads, args, forks, locks);
-	if (!info)
+	if (!info || usleep(50))
 		return (multiple_free((void *)args, forks, threads, locks), 1);
-	usleep(100);
 	if (!make_threads(threads, args, forks, locks))
 		return (multiple_free((void *)args, forks, threads, locks), 1);
 	check_death(args, threads, locks, info);

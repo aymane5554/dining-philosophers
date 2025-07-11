@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:25:01 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/11 11:11:51 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/11 15:00:35 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,4 +55,5 @@ void				multiple_free(void *first, void *second,
 char				end(char opt, pthread_mutex_t *lock);
 int					check_wait(t_philo *philo, int coordinates[2], int picked);
 int					check(int ms, t_philo *philo, int *ret);
+void				put_forks(t_philo *philo, int coordinates[2]);
 #endif

@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 10:12:13 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/11 11:21:47 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/11 15:00:27 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,4 +41,14 @@ int	check_wait(t_philo *philo, int coordinates[2], int picked)
 	if (ret == 2)
 		free(philo);
 	return (ret);
+}
+
+void	put_forks(t_philo *philo, int coordinates[2])
+{
+	pthread_mutex_lock(philo->lock + 2 + coordinates[0]);
+	philo->forks[coordinates[0]] = 'a';
+	pthread_mutex_unlock(philo->lock + 2 + coordinates[0]);
+	pthread_mutex_lock(philo->lock + 2 + coordinates[1]);
+	philo->forks[coordinates[1]] = 'a';
+	pthread_mutex_unlock(philo->lock + 2 + coordinates[1]);
 }

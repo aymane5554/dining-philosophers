@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 12:20:32 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/11 12:02:58 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/11 14:59:36 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,7 @@ int	eating(t_philo *philo, int coordinates[2], int *meals)
 	(pthread_mutex_unlock(philo->lock), philo->age = timenow());
 	if (check(philo->args[2], philo, &ret))
 		return (ret);
-	pthread_mutex_lock(philo->lock + 2 + coordinates[0]);
-	philo->forks[coordinates[0]] = 'a';
-	pthread_mutex_unlock(philo->lock + 2 + coordinates[0]);
-	pthread_mutex_lock(philo->lock + 2 + coordinates[1]);
-	philo->forks[coordinates[1]] = 'a';
-	pthread_mutex_unlock(philo->lock + 2 + coordinates[1]);
+	put_forks(philo, coordinates);
 	if (philo->args[4] != -1)
 		(*meals)++;
 	if (*meals == philo->args[4])
