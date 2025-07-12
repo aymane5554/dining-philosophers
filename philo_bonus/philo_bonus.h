@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 16:37:56 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/10 11:21:31 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/12 10:40:34 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ typedef struct s_arg
 	sem_t		*sem_ate;
 	char		ate[1];
 	sem_t		*sem;
+	sem_t		*end;
 	long long	age;
 	int			number;
 }	t_arg;
@@ -46,4 +47,5 @@ char		*ft_strjoin(char const *s1, char const *s2);
 char		*ft_itoa(int n);
 char		*get_sem_name(int number);
 void		pick_forks(t_arg *arg);
+void		msg(char opt, int n, sem_t *end);
 #endif

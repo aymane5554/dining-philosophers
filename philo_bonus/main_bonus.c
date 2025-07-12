@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 16:37:30 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/06 09:47:07 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/12 10:43:00 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void	*timer(void	*arg)
 		sem_wait(tt->sem_ate);
 	}
 	sem_post(tt->sem_ate);
+	sem_wait(tt->end);
 	printf("%lld %d died\n", timenow() - start_time(), tt->number);
 	exit(1);
 	return (NULL);
@@ -43,6 +44,7 @@ int	timer_create_(t_arg *arg)
 	{
 		sem_close(arg->sem);
 		sem_close(arg->sem_ate);
+		sem_close(arg->end);
 		exit(1);
 	}
 	pthread_detach(thread);
@@ -60,17 +62,17 @@ int	philosopher(t_arg *arg)
 	arg->age = timenow();
 	while (meals != arg->args[4])
 	{
-		printf("%lld %d is thinking\n", timenow() - start_time(), arg->number);
+		msg(1, arg->number, arg->end);
 		(sem_wait(arg->sem_ate), arg->ate[0] = 0);
 		(sem_post(arg->sem_ate), timer_create_(arg), pick_forks(arg));
 		(sem_wait(arg->sem_ate), arg->ate[0] = 1, sem_post(arg->sem_ate));
-		printf("%lld %d is eating\n", timenow() - start_time(), arg->number);
+		msg(2, arg->number, arg->end);
 		(sem_wait(arg->sem_ate), arg->age = timenow(), sem_post(arg->sem_ate));
 		ft_usleep(arg->args[2], arg->args[1], arg->age, arg);
 		(sem_post(arg->sem), sem_post(arg->sem));
 		if (arg->args[4] != -1)
 			meals++;
-		printf("%lld %d is sleeping\n", timenow() - start_time(), arg->number);
+		msg(3, arg->number, arg->end);
 		if (meals == arg->args[4])
 			(sem_close(arg->sem_ate), sem_close(arg->sem), exit(0));
 		ft_usleep(arg->args[3], arg->args[1], arg->age, arg);
@@ -104,17 +106,20 @@ void	wait_philos(int *args, pid_t *pids, sem_t *sem)
 
 int	main(int argc, char **argv)
 {
-	sem_t		*sem;
-	int			i;
-	t_arg		arg;
-	pid_t		*pids;
+	sem_t	*sem;
+	int		i;
+	t_arg	arg;
+	pid_t	*pids;
+	sem_t	*end;
 
 	i = 0;
 	if (!get_args(argc, argv, arg.args))
 		return (error(), 1);
 	sem = sem_open("_sem_philo_", O_CREAT | O_EXCL, 0777, arg.args[0]);
-	sem_unlink("_sem_philo_");
+	end = sem_open("end", O_CREAT | O_EXCL, 0777, 1);
+	(sem_unlink("_sem_philo_"), sem_unlink("end"));
 	arg.sem = sem;
+	arg.end = end;
 	pids = malloc(arg.args[0] * sizeof(pid_t));
 	if (!pids)
 		return (error(), 1);

@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:32 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/11 15:04:01 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/12 10:34:49 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,16 +78,16 @@ int	ft_usleep(int ms, int time2die, long long last_meal,
 	{
 		if (now - age >= time2die)
 		{
-			printf("%lld %d died\n", timenow() - start_time(), arg->number);
-			exit(1);
+			(sem_wait(arg->end), printf("%lld %d died\n",
+					timenow() - start_time(), arg->number), exit(1));
 		}
 		(usleep(100), gettimeofday(&tv, NULL));
 		now = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
 	}
 	if (now - age >= time2die)
 	{
-		printf("%lld %d died\n", timenow() - start_time(), arg->number);
-		exit(1);
+		(sem_wait(arg->end), printf("%lld %d died\n",
+				timenow() - start_time(), arg->number), exit(1));
 	}
 	return (0);
 }

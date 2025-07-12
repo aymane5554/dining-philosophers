@@ -1,5 +1,5 @@
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror #-fsanitize=thread
 SRCS = init_bonus.c main_bonus.c ft_atoi_bonus.c kill_philos.c ft_itoa_bonus.c join_bonus.c
 OBJS = $(SRCS:%.c=%.o)
 NAME = philo_bonus

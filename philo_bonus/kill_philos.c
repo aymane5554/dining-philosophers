@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 11:17:02 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/02 14:26:18 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/12 10:39:50 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,35 @@ char	*get_sem_name(int number)
 void	pick_forks(t_arg *arg)
 {
 	sem_wait(arg->sem);
+	sem_wait(arg->end);
 	printf("%lld %d has taken a fork\n",
 		timenow() - start_time(), arg->number);
+	sem_post(arg->end);
 	sem_wait(arg->sem);
+	sem_wait(arg->end);
 	printf("%lld %d has taken a fork\n",
 		timenow() - start_time(), arg->number);
+	sem_post(arg->end);
+}
+
+void	msg(char opt, int n, sem_t *end)
+{
+	if (opt == 1)
+	{
+		sem_wait(end);
+		printf("%lld %d is thinking\n", timenow() - start_time(), n);
+		sem_post(end);
+	}
+	else if (opt == 2)
+	{
+		sem_wait(end);
+		printf("%lld %d is eating\n", timenow() - start_time(), n);
+		sem_post(end);
+	}
+	else if (opt == 3)
+	{
+		sem_wait(end);
+		printf("%lld %d is sleeping\n", timenow() - start_time(), n);
+		sem_post(end);
+	}
 }
