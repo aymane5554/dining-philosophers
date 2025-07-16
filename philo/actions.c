@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 12:20:32 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/16 16:00:29 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/16 16:38:58 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ int	eating(t_philo *philo, int coordinates[2], int *meals)
 	if (philo->args[4] != -1)
 		(*meals)++;
 	if (*meals == philo->args[4])
-		(pthread_mutex_lock(philo->lock), philo->info[1]++,
-			pthread_mutex_unlock(philo->lock));
+		return (pthread_mutex_lock(philo->lock), philo->info[1]++,
+			*(philo->age) = 0, pthread_mutex_unlock(philo->lock), 2);
 	if (!end(0, philo->lock + 1))
 		printf("%lld %d is sleeping\n",
 			timenow() - philo->args[5], philo->number + 1);

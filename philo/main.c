@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/16 15:56:04 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/16 16:47:17 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ void	*philosopher(void	*arg)
 	int		meals;
 	int		ret;
 
+	// ./philo 200 800 200 200 msg overlap
 	philo = philo_init(arg, &meals, coordinates);
 	while (meals != philo->args[4] && !end(0, philo->lock + 1))
 	{
@@ -92,7 +93,7 @@ static void	check_death(const long long *args, long long *philo_age,
 		if (someone_died_waiting(args, philo_age, lock))
 			return ;
 		pthread_mutex_unlock(lock);
-		usleep(1000);
+		usleep(500);
 	}
 	pthread_mutex_lock(lock);
 	if (info[0])
