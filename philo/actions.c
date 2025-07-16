@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 12:20:32 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/16 11:36:32 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/16 16:00:29 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,26 @@ char	pick_forks(t_philo *philo, int coordinates[2])
 	if (end(0, philo->lock + 1))
 		return (1);
 	pthread_mutex_lock(philo->lock + 2 + coordinates[1]);
+	if (!end(0, philo->lock + 1))
+		printf("%lld %d has taken a fork\n",
+			timenow() - philo->args[5], philo->number + 1);
+	return (0);
+}
+
+char	pick_forks_(t_philo *philo, int coordinates[2])
+{
+	if (!end(0, philo->lock + 1))
+		printf("%lld %d is thinking\n",
+			timenow() - philo->args[5], philo->number + 1);
+	if (end(0, philo->lock + 1))
+		return (1);
+	pthread_mutex_lock(philo->lock + 2 + coordinates[1]);
+	if (!end(0, philo->lock + 1))
+		printf("%lld %d has taken a fork\n",
+			timenow() - philo->args[5], philo->number + 1);
+	if (end(0, philo->lock + 1))
+		return (1);
+	pthread_mutex_lock(philo->lock + 2 + coordinates[0]);
 	if (!end(0, philo->lock + 1))
 		printf("%lld %d has taken a fork\n",
 			timenow() - philo->args[5], philo->number + 1);

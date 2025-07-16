@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/16 11:24:47 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/16 15:56:04 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,16 @@ void	*philosopher(void	*arg)
 	philo = philo_init(arg, &meals, coordinates);
 	while (meals != philo->args[4] && !end(0, philo->lock + 1))
 	{
-		if (pick_forks(philo, coordinates))
-			return (free(philo), NULL);
+		if (philo->number % 2 == 0)
+		{
+			if (pick_forks(philo, coordinates))
+				return (free(philo), NULL);
+		}
+		else
+		{
+			if (pick_forks_(philo, coordinates))
+				return (free(philo), NULL);
+		}
 		ret = eating(philo, coordinates, &meals);
 		if (ret == 1)
 			return (death(philo), NULL);

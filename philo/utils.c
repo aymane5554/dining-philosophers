@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 00:29:46 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/16 10:33:43 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/16 15:59:13 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,18 +48,32 @@ int	ft_usleep(int ms, t_philo *philo)
 	return (0);
 }
 
-t_philo	*create_philo_struct(const long long *args,
-		pthread_mutex_t *locks, long long *info, int i)
+t_philo	**create_philo_struct(const long long *args,
+		pthread_mutex_t *locks, long long *info, long long *philo_age)
 {
-	t_philo		*tmp;
+	t_philo		**tmp;
+	int			j;
 
-	tmp = malloc(sizeof(t_philo));
+	j = 0;
+	tmp = malloc(sizeof(t_philo *) * args[0]);
 	if (!tmp)
 		return (NULL);
-	tmp->args = args;
-	tmp->lock = locks;
-	tmp->info = info;
-	tmp->number = i;
+	while (j < args[0])
+	{
+		tmp[j] = malloc(sizeof(t_philo));
+		if (!tmp[j])
+		{
+			while (j >= 0)
+				(free(tmp[j]), j--);
+			return (free(tmp), NULL);
+		}
+		tmp[j]->args = args;
+		tmp[j]->lock = locks;
+		tmp[j]->info = info;
+		tmp[j]->number = j;
+		tmp[j]->age = philo_age + j;
+		j++;
+	}
 	return (tmp);
 }
 
@@ -69,4 +83,10 @@ void	multiple_free(void *first, void *second, void *third, void *forth)
 	free(second);
 	free(third);
 	free(forth);
+}
+
+void	put_forks_(t_philo *philo, int coordinates[2])
+{
+	pthread_mutex_unlock(philo->lock + 2 + coordinates[1]);
+	pthread_mutex_unlock(philo->lock + 2 + coordinates[0]);
 }
