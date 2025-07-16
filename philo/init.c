@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:32 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/16 10:40:12 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/16 11:36:47 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@ long long	*make_threads(pthread_t	*threads, long long *args,
 		tmp->age = philo_age + i;
 		if (pthread_create(threads + i, NULL, philosopher, tmp) != 0)
 			return (end(1, locks + 1), unlock_all(locks, args[0]),
+				unlock_all(locks, args[0]),
 				join_and_destroy(args, threads, locks),
 				free(tmp), free(info), NULL);
 		i += 2;

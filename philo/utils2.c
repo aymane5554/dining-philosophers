@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 10:12:13 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/16 10:47:05 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/16 11:33:49 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ void	join_and_destroy(const long long *args, pthread_t *threads,
 	while (i < args[0])
 		(pthread_join(threads[i], NULL), i++);
 	i = 0;
+	pthread_mutex_destroy(locks + 0);
+	pthread_mutex_destroy(locks + 1);
 	while (i < args[0])
 		(pthread_mutex_destroy(locks + i), i++);
 }
