@@ -6,13 +6,13 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 10:12:13 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/16 11:33:49 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/17 17:11:35 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-char	someone_died_waiting(const long long *args,
+char	someone_died_waiting(const long long *args, long long *info,
 			long long *philo_age, pthread_mutex_t *lock)
 {
 	int			j;
@@ -23,7 +23,8 @@ char	someone_died_waiting(const long long *args,
 		if (timenow() - philo_age[j] > args[1] && philo_age[j] != 0)
 		{
 			end(1, lock + 1);
-			printf("%lld %d died\n", timenow() - args[5], j + 1);
+			info[0] = j + 1;
+			info[2] = timenow() - args[5];
 			pthread_mutex_unlock(lock);
 			j = 0;
 			while (j < args[0])

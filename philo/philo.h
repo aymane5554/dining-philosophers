@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:25:01 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/16 15:59:28 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/17 17:11:02 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void				put_forks_(t_philo *philo, int coordinates[2]);
 int					check(int ms, t_philo *philo, int *ret);
 void				join_and_destroy(const long long *args, pthread_t *threads,
 						pthread_mutex_t *locks);
-char				someone_died_waiting(const long long *args,
+char				someone_died_waiting(const long long *args, long long *info,
 						long long *philo_age, pthread_mutex_t *lock);
 void				unlock_all(pthread_mutex_t *locks, int n);
 #endif

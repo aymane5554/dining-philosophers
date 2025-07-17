@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/16 18:38:58 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/17 17:22:58 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,11 +89,12 @@ static void	check_death(const long long *args, long long *philo_age,
 				(pthread_mutex_unlock(lock + 2 + i), i++);
 			break ;
 		}
-		if (someone_died_waiting(args, philo_age, lock))
-			return ;
+		if (someone_died_waiting(args, info, philo_age, lock))
+			break ;
 		pthread_mutex_unlock(lock);
 		usleep(500);
 	}
+	usleep(10000);
 	pthread_mutex_lock(lock);
 	if (info[0])
 		printf("%lld %lld died\n", info[2], info[0]);
