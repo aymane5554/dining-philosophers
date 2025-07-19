@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 12:20:32 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/17 17:21:55 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/19 15:12:57 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ int	eating(t_philo *philo, int coordinates[2], int *meals)
 			timenow() - philo->args[5], philo->number + 1);
 	if (check(philo->args[3], philo, &ret))
 		return (ret);
+	if (philo->args[0] % 2 != 0)
+		usleep((ft_abs(philo->args[2] - philo->args[3]) + 1) * 1000);
 	return (0);
 }
 

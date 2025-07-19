@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:25:01 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/17 17:11:02 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/19 15:12:43 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ typedef struct s_philo
 	int				number;
 }	t_philo;
 
+int					ft_abs(int n);
 void				*death(t_philo *philo);
 int					eating(t_philo *philo, int coordinates[2], int *meals);
 char				pick_forks(t_philo *philo, int coordinates[2]);

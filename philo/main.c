@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/17 17:22:58 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/19 15:34:44 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,13 @@
 //	locks[0]= mutex lock for info
 //	locks[1]= mutex lock for end
 //	locks[n]= mutex lock for forks
+
+int	ft_abs(int n)
+{
+	if (n < 0)
+		return (n * -1);
+	return (n);
+}
 
 static t_philo	*philo_init(void *arg, int *meals, int coordinates[2])
 {
@@ -121,7 +128,7 @@ int	main(int argc, char **argv)
 	if (!locks)
 		return (multiple_free((void *)args, threads, locks, philos_age), 1);
 	info = make_threads(threads, (long long *)args, locks, philos_age);
-	if (!info || usleep(50))
+	if (!info)
 		return (multiple_free((void *)args, threads, locks, philos_age), 1);
 	if (!make_threads(threads, (long long *)args, locks, philos_age))
 		return (multiple_free((void *)args, threads, locks, philos_age), 1);

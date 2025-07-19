@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 10:12:13 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/17 17:11:35 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/19 15:09:32 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,14 @@ int	check(int ms, t_philo *philo, int *ret)
 
 void	put_forks(t_philo *philo, int coordinates[2])
 {
-	pthread_mutex_unlock(philo->lock + 2 + coordinates[0]);
-	pthread_mutex_unlock(philo->lock + 2 + coordinates[1]);
+	if (philo->number % 2 == 0)
+	{
+		pthread_mutex_unlock(philo->lock + 2 + coordinates[0]);
+		pthread_mutex_unlock(philo->lock + 2 + coordinates[1]);
+	}
+	else
+	{
+		pthread_mutex_unlock(philo->lock + 2 + coordinates[1]);
+		pthread_mutex_unlock(philo->lock + 2 + coordinates[0]);
+	}
 }
