@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 12:20:32 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/20 10:29:57 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/20 11:12:20 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,13 @@ int	eating(t_philo *philo, int coordinates[2], int *meals)
 	if (check(philo->args[3], philo, &ret))
 		return (ret);
 	if (philo->args[0] % 2 != 0 && philo->args[2] >= philo->args[3])
-		usleep((ft_abs(philo->args[2] - philo->args[3]) + 1) * 1000);
+		usleep((check_time(philo->args[2] - philo->args[3], philo) + 1) * 1000);
 	return (0);
 }
 
 char	pick_forks(t_philo *philo, int coordinates[2])
 {
-	if (!end(0, philo->lock + 1))
+	if (!end(0, philo->lock + 1) && !philo->thinking)
 		printf("%lld %d is thinking\n",
 			timenow() - philo->args[5], philo->number + 1);
 	if (end(0, philo->lock + 1))
@@ -71,12 +71,13 @@ char	pick_forks(t_philo *philo, int coordinates[2])
 	if (!end(0, philo->lock + 1))
 		printf("%lld %d has taken a fork\n",
 			timenow() - philo->args[5], philo->number + 1);
+	philo->thinking = 0;
 	return (0);
 }
 
 char	pick_forks_(t_philo *philo, int coordinates[2])
 {
-	if (!end(0, philo->lock + 1))
+	if (!end(0, philo->lock + 1) && !philo->thinking)
 		printf("%lld %d is thinking\n",
 			timenow() - philo->args[5], philo->number + 1);
 	if (end(0, philo->lock + 1))
@@ -91,6 +92,7 @@ char	pick_forks_(t_philo *philo, int coordinates[2])
 	if (!end(0, philo->lock + 1))
 		printf("%lld %d has taken a fork\n",
 			timenow() - philo->args[5], philo->number + 1);
+	philo->thinking = 0;
 	return (0);
 }
 
