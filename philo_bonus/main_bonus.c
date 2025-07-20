@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 16:37:30 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/12 10:43:00 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/20 11:50:25 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	*timer(void	*arg)
 
 	tt = (t_arg *)arg;
 	sem_wait(tt->sem_ate);
-	while (timenow() - tt->age < tt->args[1])
+	while (timenow() - tt->age <= tt->args[1])
 	{
 		if (tt->ate[0] == 1)
 		{
