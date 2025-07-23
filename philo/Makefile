@@ -1,5 +1,5 @@
 CC = cc
-CFLAGS = -Wall -Wextra -Werror #-g3 -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror
 SRCS = main.c ft_atoi.c init.c actions.c utils.c utils2.c
 OBJS = $(SRCS:%.c=%.o)
 NAME = philo

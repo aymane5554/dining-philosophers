@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:32 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/20 11:39:48 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/23 15:45:27 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,31 +68,29 @@ pthread_mutex_t	*creating_locks(int no_philos)
 long long	*make_threads(pthread_t	*threads, long long *args,
 		pthread_mutex_t	*locks, long long *philo_age)
 {
-	static t_philo		**tmp;
-	static int			i;
-	static long long	*info;
+	t_philo		**tmp;
+	int			i;
+	long long	*info;
 
+	i = 0;
+	info = malloc(3 * sizeof(long long));
 	if (!info)
-	{
-		info = malloc(3 * sizeof(long long));
-		if (!info)
-			return (NULL);
-		(memset(info, 0, 3 * sizeof(long long)), args[5] = timenow());
-		tmp = create_philo_struct(args, locks, info, philo_age);
-		if (!tmp)
-			return (free(info), NULL);
-	}
+		return (NULL);
+	memset(info, 0, 3 * sizeof(long long));
+	args[5] = timenow();
+	tmp = create_philo_struct(args, locks, info, philo_age);
+	if (!tmp)
+		return (free(info), NULL);
 	while (i < args[0])
 	{
 		if (pthread_create(threads + i, NULL, philosopher, tmp[i]) != 0)
 			return (end(1, locks + 1), unlock_all(locks, args[0]),
 				join_and_destroy(args, threads, locks),
 				free(tmp), free(info), NULL);
-		i += 2;
+		i++;
 	}
-	if (i % 2 != 0)
-		free(tmp);
-	return (i = 1, info);
+	free(tmp);
+	return (info);
 }
 
 long long	timenow(void)

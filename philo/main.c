@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/21 10:23:19 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/23 16:11:07 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ static t_philo	*philo_init(void *arg, int *meals, int coordinates[2])
 	pthread_mutex_lock(philo->lock);
 	*(philo->age) = timenow();
 	pthread_mutex_unlock(philo->lock);
+	if (philo->number % 2 != 0)
+		usleep(50000);
 	coordinates[0] = philo->number - 1;
 	if (philo->number == 0)
 		coordinates[0] = philo->args[0] - 1;
@@ -64,16 +66,8 @@ void	*philosopher(void	*arg)
 	philo = philo_init(arg, &meals, coordinates);
 	while (meals != philo->args[4] && !end(0, philo->lock + 1))
 	{
-		if (philo->number % 2 == 0)
-		{
-			if (pick_forks(philo, coordinates))
-				return (free(philo), NULL);
-		}
-		else
-		{
-			if (pick_forks_(philo, coordinates))
-				return (free(philo), NULL);
-		}
+		if (pick_forks(philo, coordinates))
+			return (free(philo), NULL);
 		ret = eating(philo, coordinates, &meals);
 		if (ret == 1)
 			return (death(philo), NULL);
@@ -103,7 +97,7 @@ static void	check_death(const long long *args, long long *philo_age,
 		if (someone_died_waiting(args, info, philo_age, lock))
 			break ;
 		pthread_mutex_unlock(lock);
-		usleep(500);
+		usleep(1000);
 	}
 	usleep(10000);
 	pthread_mutex_lock(lock);
@@ -132,9 +126,7 @@ int	main(int argc, char **argv)
 	if (!locks)
 		return (multiple_free((void *)args, threads, locks, philos_age), 1);
 	info = make_threads(threads, (long long *)args, locks, philos_age);
-	if (!info || usleep(50))
-		return (multiple_free((void *)args, threads, locks, philos_age), 1);
-	if (!make_threads(threads, (long long *)args, locks, philos_age))
+	if (!info)
 		return (multiple_free((void *)args, threads, locks, philos_age), 1);
 	check_death(args, philos_age, locks, info);
 	(join_and_destroy(args, threads, locks), free((void *)args));

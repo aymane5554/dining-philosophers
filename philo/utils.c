@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 00:29:46 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/20 10:29:45 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/23 16:20:49 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,10 @@ int	ft_usleep(int ms, t_philo *philo)
 	long long		now;
 	long long		age;
 
-	gettimeofday(&tv, NULL);
 	pthread_mutex_lock(philo->lock);
 	age = *(philo->age);
 	pthread_mutex_unlock(philo->lock);
+	gettimeofday(&tv, NULL);
 	now = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
 	start = now;
 	while (now - start < ms)
@@ -39,7 +39,7 @@ int	ft_usleep(int ms, t_philo *philo)
 			return (1);
 		if (end(0, philo->lock + 1))
 			return (2);
-		usleep(100);
+		usleep(500);
 		gettimeofday(&tv, NULL);
 		now = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
 	}
