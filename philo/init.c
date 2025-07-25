@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:32 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/23 15:45:27 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/25 17:16:01 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,13 +53,13 @@ pthread_mutex_t	*creating_locks(int no_philos)
 	if (!locks)
 		return (NULL);
 	if (pthread_mutex_init(locks, NULL))
-		return (NULL);
+		return (free(locks), NULL);
 	if (pthread_mutex_init(locks + 1, NULL))
-		return (NULL);
+		return (free(locks), NULL);
 	while (i < no_philos)
 	{
 		if (pthread_mutex_init(locks + 2 + i, NULL))
-			return (NULL);
+			return (free(locks), NULL);
 		i++;
 	}
 	return (locks);
@@ -86,7 +86,7 @@ long long	*make_threads(pthread_t	*threads, long long *args,
 		if (pthread_create(threads + i, NULL, philosopher, tmp[i]) != 0)
 			return (end(1, locks + 1), unlock_all(locks, args[0]),
 				join_and_destroy(args, threads, locks),
-				free(tmp), free(info), NULL);
+				free_philos(tmp, i, args[0]), free(info), NULL);
 		i++;
 	}
 	free(tmp);

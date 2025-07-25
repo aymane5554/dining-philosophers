@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:25:01 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/20 11:11:31 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/25 17:14:23 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,9 @@ typedef struct s_philo
 	char			thinking;
 }	t_philo;
 
-int					check_time(int n, t_philo *philo);
 void				*death(t_philo *philo);
 int					eating(t_philo *philo, int coordinates[2], int *meals);
 char				pick_forks(t_philo *philo, int coordinates[2]);
-char				pick_forks_(t_philo *philo, int coordinates[2]);
 int					ft_atoi(const char *ptr);
 long long			*get_args(int argc, char **argv);
 long long			*get_args_(int argc, char **argv, long long **args);
@@ -53,11 +51,11 @@ void				multiple_free(void *first, void *second,
 						void *third, void *forth);
 char				end(char opt, pthread_mutex_t *lock);
 void				put_forks(t_philo *philo, int coordinates[2]);
-void				put_forks_(t_philo *philo, int coordinates[2]);
 int					check(int ms, t_philo *philo, int *ret);
 void				join_and_destroy(const long long *args, pthread_t *threads,
 						pthread_mutex_t *locks);
 char				someone_died_waiting(const long long *args, long long *info,
 						long long *philo_age, pthread_mutex_t *lock);
 void				unlock_all(pthread_mutex_t *locks, int n);
+void				free_philos(t_philo **philo, int i, int size);
 #endif

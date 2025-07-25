@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 00:29:46 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/23 16:20:49 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/25 17:14:13 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,12 @@ void	multiple_free(void *first, void *second, void *third, void *forth)
 	free(forth);
 }
 
-void	put_forks_(t_philo *philo, int coordinates[2])
+void	free_philos(t_philo **philo, int i, int size)
 {
-	pthread_mutex_unlock(philo->lock + 2 + coordinates[1]);
-	pthread_mutex_unlock(philo->lock + 2 + coordinates[0]);
+	while (i < size)
+	{
+		free(philo[i]);
+		i++;
+	}
+	free(philo);
 }

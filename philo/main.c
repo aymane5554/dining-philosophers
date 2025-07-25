@@ -6,7 +6,7 @@
 /*   By: ayel-arr <ayel-arr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:24:29 by ayel-arr          #+#    #+#             */
-/*   Updated: 2025/07/23 16:11:07 by ayel-arr         ###   ########.fr       */
+/*   Updated: 2025/07/25 17:11:22 by ayel-arr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,17 +26,6 @@
 //	locks[0]= mutex lock for info
 //	locks[1]= mutex lock for end
 //	locks[n]= mutex lock for forks
-
-int	check_time(int n, t_philo *philo)
-{
-	philo->thinking = 1;
-	if (!end(0, philo->lock + 1))
-		printf("%lld %d is thinking\n",
-			timenow() - philo->args[5], philo->number + 1);
-	if (n < 0)
-		return (n * -1);
-	return (n);
-}
 
 static t_philo	*philo_init(void *arg, int *meals, int coordinates[2])
 {
